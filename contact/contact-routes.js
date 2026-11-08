@@ -33,8 +33,8 @@ function classerCourriel(subject, message) {
 
 let _hq = null;
 function hqClient() {
-  if (!_hq && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    _hq = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+  if (!_hq && require('../lib/supabase-key').HAS_SERVICE_KEY) {
+    _hq = createClient(require('../lib/supabase-key').url, require('../lib/supabase-key').key, {
       auth: { persistSession: false, autoRefreshToken: false }
     });
   }

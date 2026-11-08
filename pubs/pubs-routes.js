@@ -7,10 +7,7 @@ const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const { sanitizeResults } = require('../utils/response-sanitizer');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(require('../lib/supabase-key').url, require('../lib/supabase-key').key);
 
 const router = express.Router();
 

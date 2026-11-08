@@ -5,10 +5,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(require('../lib/supabase-key').url, require('../lib/supabase-key').key);
 
 // Regroupe des lignes par colonne → [{ <colonne>: valeur, total: n }]
 function groupCount(rows, column) {

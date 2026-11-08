@@ -33,7 +33,7 @@ if (missingVars.length > 0) {
 // Initialize Stripe with error handling
 let stripe;
 try {
-  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_fake');
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 } catch (e) {
   console.warn('⚠️ Stripe initialization warning - check STRIPE_SECRET_KEY');
   stripe = null;
@@ -54,10 +54,7 @@ const PORT = process.env.PORT || 3000;
 // ─────────────────────────────────────────────────────────────
 let supabase;
 try {
-  supabase = createClient(
-    process.env.SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-  );
+  supabase = createClient(require('./lib/supabase-key').url, require('./lib/supabase-key').key);
 } catch (e) {
   console.warn('⚠️ Supabase initialization warning - check credentials');
   supabase = null;
@@ -67,8 +64,19 @@ try {
 // Middleware
 // ─────────────────────────────────────────────────────────────
 
+// Mode dégradé : sans clé service_role ni vraie clé Stripe, les paiements sont refusés
+// (503) plutôt que d'encaisser sans pouvoir créditer le membre. Stripe réessaiera le webhook.
+function exigerPaiementsActifs(req, res, next) {
+  const k = require('./lib/supabase-key');
+  if (!k.HAS_SERVICE_KEY || !k.HAS_STRIPE_KEY) {
+    return res.status(503).json({ error: 'Paiements temporairement indisponibles (configuration serveur incomplète).' });
+  }
+  next();
+}
+
 // ⚠️ CRITICAL: Raw body parser for Stripe webhooks (MUST be before json)
 app.post('/api/webhooks/stripe',
+  exigerPaiementsActifs,
   express.raw({ type: 'application/json' }),
   handleWebhook
 );
@@ -147,7 +155,7 @@ const MAX_PIONNIERS = 500;
 // ROUTE: Create Checkout Session
 // ─────────────────────────────────────────────────────────────
 
-app.post('/api/checkout-session', verifyAuth, async (req, res) => {
+app.post('/api/checkout-session', exigerPaiementsActifs, verifyAuth, async (req, res) => {
   try {
     const { tier } = req.body;
     // Identité tirée du JWT : on ignore tout auth_id / email envoyé par le client.

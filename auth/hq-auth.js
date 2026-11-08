@@ -14,7 +14,7 @@ const { createClient } = require('@supabase/supabase-js');
 let _sb = null;
 function sb() {
   if (!_sb) {
-    _sb = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_SERVICE_ROLE_KEY || '', {
+    _sb = createClient(require('../lib/supabase-key').url, require('../lib/supabase-key').key, {
       auth: { persistSession: false, autoRefreshToken: false }
     });
   }

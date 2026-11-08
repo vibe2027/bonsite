@@ -7,10 +7,7 @@ const { createClient } = require('@supabase/supabase-js');
 const PDFDocument = require('pdfkit');
 const { stringify } = require('csv-stringify/sync');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(require('../lib/supabase-key').url, require('../lib/supabase-key').key);
 
 // ─────────────────────────────────────────────────────────────
 // User Analytics

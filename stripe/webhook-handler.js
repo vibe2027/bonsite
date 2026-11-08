@@ -17,8 +17,8 @@ const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_URL = require('../lib/supabase-key').url;
+const SUPABASE_SERVICE_KEY = require('../lib/supabase-key').key;
 
 // ─────────────────────────────────────────────────────────────
 // Initialize Supabase client (service_role bypasses RLS)
