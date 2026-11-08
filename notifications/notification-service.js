@@ -239,7 +239,7 @@ async function notifySecurityAlert(userId, alertType, details) {
     const title = {
       login: 'Nouvelle connexion détectée',
       password_change: 'Mot de passe changé',
-      2fa_enabled: 'Authentification 2FA activée'
+      '2fa_enabled': 'Authentification 2FA activée'
     }[alertType] || 'Alerte sécurité';
 
     await createNotification(

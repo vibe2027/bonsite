@@ -21,6 +21,16 @@ const {
 
 const router = express.Router();
 
+// Ces routes lisent/écrivent des tables protégées par RLS avec la clé service_role.
+// Sans elle, elles répondent 503 ; le QG du site (js/hq-qg.js) passe par des RPC
+// SECURITY DEFINER avec le JWT du membre et fonctionne quand même.
+router.use((req, res, next) => {
+  if (!require('../lib/supabase-key').HAS_SERVICE_KEY) {
+    return res.status(503).json({ error: 'Routes d\'administration indisponibles : clé service_role absente du serveur. Le QG du site reste disponible.' });
+  }
+  next();
+});
+
 // Contrôle d'accès : JWT Supabase vérifié + rôle du QG (hq_command_emails).
 // Les en-têtes x-user-role / x-user-id ne sont plus jamais lus (falsifiables).
 //   requireAdmin        → Fondateur ou Directeur des Opérations
