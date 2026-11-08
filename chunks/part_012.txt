@@ -1,0 +1,186 @@
+NT_USER){
+    window.salonUI.selectSalon(nom).catch(e=>console.warn('Erreur salon temps réel:', e.message));
+  }
+  const box=document.getElementById('salon-chatbox');
+  if(box)box.scrollIntoView({behavior:'smooth',block:'center'});
+  const inp=document.getElementById('chat-input');
+  if(inp)setTimeout(()=>inp.focus(),400);
+}
+function allerVersVille(ville){
+  const champ=document.getElementById('dec-ville');
+  if(champ)champ.value=ville;
+  if(typeof chargerDecouverte==='function')chargerDecouverte();
+  const cible=document.getElementById('annuaire-membres')||document.getElementById('salon-section');
+  if(cible)cible.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function switchSalon(nom){
+  if(currentSalon===nom)return;
+  currentSalon=nom;
+  const bd=document.getElementById('salon-backdrop');
+  if(bd){bd.classList.remove('bd-flottant','bd-voix','bd-fantomes');bd.classList.add('bd-'+nom);}
+  const LABELS={flottant:'🌊 SALON FLOTTANT',voix:'🎙 SALON DE LA VOIX',fantomes:'👻 SALLE DES FANTÔMES'};
+  const lbl=document.getElementById('salon-actif-label');
+  if(lbl){lbl.textContent=LABELS[nom]||'';lbl.style.color=SALON_COLORS[nom]||'#D4AF37'}
+  document.querySelectorAll('.salon-tab-btn').forEach(b=>{
+    const actif=b.dataset.salon===nom;
+    b.style.background=actif?'#D4AF37':'transparent';
+    b.style.color=actif?'#000':'rgba(212,175,55,0.6)';
+    b.style.fontWeight=actif?'700':'400';
+  });
+  document.querySelectorAll('.salon-card').forEach(c=>{
+    const actif=c.dataset.salon===nom;
+    c.style.borderColor=actif?(SALON_COLORS[c.dataset.salon]||'#D4AF37'):'rgba(255,255,255,0.15)';
+    c.style.background=actif?'rgba(212,175,55,0.12)':'rgba(255,255,255,0.02)';
+  });
+  loadChatMsgs();
+  subscribeChat();
+}
+
+async function sendChatMsg(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim();if(!msg)return;
+  if(!CURRENT_USER){showError('⚠ Connecte-toi pour envoyer un message.');openLogin();return;}
+  const {data:monProfil}=await _supa.from('profiles').select('lecture_seule_jusqu').eq('id',CURRENT_USER.id).maybeSingle();
+  if(monProfil?.lecture_seule_jusqu && new Date(monProfil.lecture_seule_jusqu) > new Date()){
+    const dateFin=new Date(monProfil.lecture_seule_jusqu).toLocaleDateString('fr-CA');
+    showError('⚠ Verdict du Tribunal : mode lecture seule jusqu\'au '+dateFin+'. Pour lever la restriction maintenant (25$ CAD), Interac à support@vibegay.ca avec ton courriel d\'inscription en référence.');
+    return;
+  }
+  inp.value='';
+  const estFantome=currentSalon==='fantomes';
+  try{
+    await _supa.from('salon_messages').insert({
+      prenom:estFantome?'👻':(CURRENT_USER.user_metadata?.prenom||'Membre'),
+      ville:estFantome?'':(CURRENT_USER.user_metadata?.ville||'QC'),
+      message:msg.slice(0,200),mode:estFantome?'fantome':'normal',
+      expediteur:estFantome?null:CURRENT_USER.id,
+      salon:currentSalon
+    });
+    // L'utilisateur parle — animer son profil
+    if(!estFantome&&salProfs.length){salProfs[0].speaking=true;salProfs[0].speakTimer=150;}
+  }catch(e){showError('⚠ Erreur envoi.');}
+}
+
+loadChatMsgs();
+subscribeChat();
+chargerDecouverte();
+
+
+// --
+// STATS SUPABASE
+// --
+async function loadStats(){
+  try{
+    const {data:stats}=await _supa.rpc('stats_publiques');
+    const membres=stats?.membres||0, sos=stats?.sos||0, trib=stats?.dossiers||0;
+    const m=membres||0,restants=Math.max(0,MAX_FOUNDERS-m);
+    const fs=document.getElementById('form-spots');if(fs)fs.textContent=`${restants} places restantes`;
+    const sc=document.getElementById('sos-count');if(sc)sc.textContent=sos||0;
+    const ap=document.getElementById('ange-members-protected');if(ap)ap.textContent=m;
+    const tc=document.getElementById('trib-count');if(tc)tc.textContent=trib||0;
+
+    // Online estimé
+    const online=Math.max(1,Math.floor(m*0.08)+Math.floor(Math.random()*3));
+    const onlineText=online<=2?'quelques':online<=5?'plusieurs':'ça bouge';
+    const onlineEl=document.getElementById('online-count');if(onlineEl)onlineEl.textContent=onlineText;
+    const hudEl=document.getElementById('hud-online');if(hudEl)hudEl.textContent='ESSAI AUDIO PRÊT';
+
+  }catch(e){}
+}
+loadStats();setInterval(loadStats,60000);
+
+// --
+// MODAL CONNEXION
+// --
+function openLogin(){document.getElementById('login-modal').classList.add('open')}
+function closeLogin(){document.getElementById('login-modal').classList.remove('open')}
+document.getElementById('login-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLogin()});
+
+async function handleLogin(e){
+  e.preventDefault();
+  const email=document.getElementById('login-email').value.trim();
+  const mdp=document.getElementById('login-mdp').value;
+  const btn=document.querySelector('#login-form .submit-btn');
+  if(btn){btn.disabled=true;btn.querySelector('span').textContent='Connexion...';}
+  try{
+    const {data,error}=await _supa.auth.signInWithPassword({email,password:mdp});
+    if(error)throw error;
+    closeLogin();
+    showSuccess(`✦ Bienvenue ${data.user?.user_metadata?.prenom||'Membre'} !`);
+    setTimeout(()=>location.reload(),1000);
+  }catch(err){
+    if(btn){btn.disabled=false;btn.querySelector('span').textContent='Entrer dans VIBE ✦';}
+    showError('⚠ '+(err.message?.includes('Invalid')?'Courriel ou mot de passe incorrect.':err.message||'Erreur.'));
+  }
+}
+
+async function handleForgotPassword(){
+  const email=document.getElementById('login-email').value.trim();
+  if(!email){showError('⚠ Entre ton courriel d\'abord.');return;}
+  try{
+    await _supa.auth.resetPasswordForEmail(email,{redirectTo:'https://vibegay.ca'});
+    showSuccess('✦ Courriel de réinitialisation envoyé !');closeLogin();
+  }catch(e){showError('⚠ '+(e.message||'Erreur.'));}
+}
+
+async function handleMagicLink(){
+  const email=document.getElementById('login-email').value.trim();
+  if(!email){showError('⚠ Entre ton courriel d\'abord.');return;}
+  try{
+    const {error}=await _supa.auth.signInWithOtp({email,options:{emailRedirectTo:'https://vibegay.ca'}});
+    if(error)throw error;
+    showSuccess('✦ Lien envoyé à '+email+' — clique dessus pour entrer directement.');closeLogin();
+  }catch(e){showError('⚠ '+(e.message||'Erreur.'));}
+}
+
+// --
+// INSCRIPTION
+// --
+
+
+// --
+// SOS MODE ANGE
+// --
+let sosActive=false;
+function setAngelStatus(type,label,tone){
+  const labelEl=document.getElementById(type==='gps'?'ange-gps-status':'ange-flow-status');
+  const dotEl=document.getElementById(type==='gps'?'ange-gps-dot':'ange-flow-dot');
+  if(labelEl)labelEl.textContent=label;
+  if(dotEl){
+    dotEl.className='ange-status-dot';
+    dotEl.classList.add(
+      tone==='ready'?'is-ready':
+      tone==='busy'?'is-busy':
+      tone==='alert'?'is-alert':
+      'is-muted'
+    );
+  }
+}
+async function activateSOS(){
+  if(sosActive)return;
+  sosActive=true;
+  const btn=document.getElementById('sos-btn');
+  const txt=document.getElementById('sos-btn-text');
+  btn.style.borderColor='#D4AF37';btn.style.color='#D4AF37';
+  txt.textContent='⟳ Obtention GPS...';
+  setAngelStatus('flow','Envoi en cours','busy');
+  setAngelStatus('gps','Recherche GPS','busy');
+
+  let gpsData={lat:null,lng:null,accuracy:null};
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000}));
+    gpsData={lat:pos.coords.latitude.toFixed(6),lng:pos.coords.longitude.toFixed(6),accuracy:Math.round(pos.coords.accuracy)+'m'};
+    txt.textContent='✦ GPS obtenu — envoi en cours...';
+    setAngelStatus('gps','GPS OK · '+gpsData.accuracy,'ready');
+  }catch(e){txt.textContent='✦ Ange activé (GPS non disponible)';}
+  if(!gpsData.accuracy)setAngelStatus('gps','GPS indisponible','muted');
+
+  let angelSaveFailed=false;
+  try{
+    const user=await _supa.auth.getUser();
+    const {error}=await _supa.from('ange_alerts').insert({
+      user_id:user?.data?.user?.id||null,
+      latitude:parseFloat(gpsData.lat)||null,
+      longitude:parseFloat(gpsData.lng)||null,
+      sta

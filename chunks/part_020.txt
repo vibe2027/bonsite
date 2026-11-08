@@ -1,0 +1,125 @@
+udo.replace(/</g,'&lt;'))+'</span> · <span style="color:rgba(255,255,255,0.85)">'+texteAffiche.replace(/</g,'&lt;')+'</span>'+badge;
+  el.appendChild(d);
+  if(m.photo_path){
+    const wrap=document.createElement('div');
+    wrap.style.cssText='margin:6px 0 10px;text-align:'+(moi?'right':'left');
+    const box=document.createElement('div');
+    box.style.cssText='position:relative;display:inline-block;width:160px;height:160px;overflow:hidden;border:1px solid rgba(212,175,55,0.4);cursor:pointer;'+
+      // Empêche le menu contextuel iOS/Android (« Enregistrer l'image ») et la sélection.
+      '-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none';
+    box.innerHTML='<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:0.5rem;letter-spacing:1px;font-family:Share Tech Mono,monospace">Chargement…</div>';
+    wrap.appendChild(box);el.appendChild(wrap);
+    _supa.storage.from('messages-photos').createSignedUrl(m.photo_path,3600).then(({data})=>{
+      if(!data?.signedUrl)return;
+      box.innerHTML='<img src="'+data.signedUrl+'" alt="Photo privée floutée" data-floutable draggable="false" style="width:100%;height:100%;object-fit:cover;filter:blur(22px);transition:filter .2s;-webkit-user-drag:none;pointer-events:none">'+
+        '<div class="reveal-hint" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);color:#fff;font-size:0.46rem;letter-spacing:1px;font-family:Share Tech Mono,monospace;text-align:center;padding:8px;pointer-events:none">👁 Maintiens le doigt<br>pour révéler</div>';
+
+      const img=box.querySelector('img');
+      const hint=box.querySelector('.reveal-hint');
+      const devoiler=e=>{e.preventDefault();img.style.filter='';hint.style.display='none';};
+      const refloutter=()=>{img.style.filter='blur(22px)';hint.style.display='flex';};
+
+      // Révélation tant que le doigt (ou le bouton) reste enfoncé. Au relâchement,
+      // à la sortie du cadre ou à l'interruption du geste, le flou revient.
+      box.addEventListener('pointerdown',devoiler);
+      box.addEventListener('pointerup',refloutter);
+      box.addEventListener('pointerleave',refloutter);
+      box.addEventListener('pointercancel',refloutter);
+      box.addEventListener('contextmenu',e=>e.preventDefault());
+    });
+  }
+  el.scrollTop=el.scrollHeight;
+}
+async function chargerPrive(){
+  const el=document.getElementById('prive-msgs');
+  el.innerHTML='<div style="color:rgba(255,255,255,0.35)">Chargement...</div>';
+  try{
+    const {data,error}=await _supa.from('messages_prives').select('*')
+      .or('and(expediteur.eq.'+CURRENT_USER.id+',destinataire.eq.'+priveAvec+'),and(expediteur.eq.'+priveAvec+',destinataire.eq.'+CURRENT_USER.id+')')
+      .order('created_at',{ascending:true}).limit(80);
+    if(error)throw error;
+    el.innerHTML='';
+    if(!data||!data.length){el.innerHTML='<div style="color:rgba(255,255,255,0.35)">Aucun message. Brise la glace.</div>';return;}
+    data.forEach(ajouterPriveMsg);
+  }catch(e){el.innerHTML='<div style="color:rgba(220,50,50,0.7)">Erreur de chargement.</div>';}
+}
+async function envoyerPhotoPrive(inp){
+  const f=inp.files&&inp.files[0];inp.value='';
+  if(!f||!priveAvec||!CURRENT_USER)return;
+  if(f.size>8*1024*1024){showError('⚠ Photo trop lourde (max 8 Mo).');return;}
+  try{
+    const path=CURRENT_USER.id+'/'+priveAvec+'/'+Date.now()+'.'+(f.name.split('.').pop()||'jpg');
+    const {error:upErr}=await _supa.storage.from('messages-photos').upload(path,f);
+    if(upErr)throw upErr;
+    const {error}=await _supa.from('messages_prives').insert({
+      expediteur:CURRENT_USER.id,destinataire:priveAvec,
+      expediteur_pseudo:CURRENT_USER.user_metadata?.prenom||'Membre',
+      contenu:'📷 Photo',photo_path:path
+    });
+    if(error)throw error;
+  }catch(e){showError('⚠ Photo pas envoyée.');}
+}
+async function envoyerPrive(){
+  const inp=document.getElementById('prive-input');
+  const txt=inp.value.trim();if(!txt||!priveAvec)return;
+  const {data:monProfilRO}=await _supa.from('profiles').select('lecture_seule_jusqu').eq('id',CURRENT_USER.id).maybeSingle();
+  if(monProfilRO?.lecture_seule_jusqu && new Date(monProfilRO.lecture_seule_jusqu) > new Date()){
+    const dateFin=new Date(monProfilRO.lecture_seule_jusqu).toLocaleDateString('fr-CA');
+    showError('⚠ Verdict du Tribunal : mode lecture seule jusqu\'au '+dateFin+'. Pour lever la restriction maintenant (25$ CAD), Interac à support@vibegay.ca avec ton courriel d\'inscription en référence.');
+    return;
+  }
+  inp.value='';
+  try{
+    let contenu_traduit=null,langue_cible=null;
+    try{
+      const {data:langueDest}=await _supa.rpc('obtenir_langue_membre',{p_id:priveAvec});
+      const {data:monProfil}=await _supa.from('profiles').select('langue').eq('id',CURRENT_USER.id).maybeSingle();
+      const mesLangue=monProfil?.langue||'fr';
+      langue_cible=langueDest||'fr';
+      if(langue_cible&&langue_cible!==mesLangue){
+        const {data:tr}=await _supa.functions.invoke('translate-message',{body:{texte:txt,langue_cible}});
+        if(tr?.traduit)contenu_traduit=tr.traduit;
+      }
+    }catch(e){/* traduction indisponible — le message original part quand même */}
+    const {error}=await _supa.from('messages_prives').insert({
+      expediteur:CURRENT_USER.id,destinataire:priveAvec,
+      expediteur_pseudo:CURRENT_USER.user_metadata?.prenom||'Membre',
+      contenu:txt,contenu_traduit,langue_cible
+    });
+    if(error)throw error;
+  }catch(e){showError('⚠ Message pas envoyé.');}
+}
+
+// -- ANNUAIRE DU SALON PRIVÉ --
+async function chargerAnnuaire(){
+  const el=document.getElementById('annuaire-membres');if(!el)return;
+  if(!CURRENT_USER){
+    el.innerHTML='<div style="font-size:0.55rem;letter-spacing:2px;color:rgba(255,255,255,0.4);font-family:Share Tech Mono,monospace;padding:14px 0">Connecte-toi pour voir les membres et leur écrire en privé. <a href="#" onclick="openLogin();return false" style="color:#D4AF37">Connexion →</a></div>';
+    return;
+  }
+  try{
+    const {data,error}=await _supa.rpc('annuaire_membres');
+    if(error)throw error;
+    const membres=(data||[]).filter(m=>m.id!==CURRENT_USER.id);
+    if(!membres.length){el.innerHTML='<div style="font-size:0.55rem;letter-spacing:2px;color:rgba(255,255,255,0.4);font-family:Share Tech Mono,monospace;padding:14px 0">Aucun autre membre pour l\'instant.</div>';return;}
+    el.innerHTML=membres.map(m=>
+      '<div onclick="ouvrirPrive(\''+m.id+'\',\''+String(m.nom).replace(/[\'<>]/g,'')+'\')" style="cursor:pointer;border:1px solid rgba(212,175,55,0.4);padding:10px 16px;font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:8px">'+
+      '<span style="width:8px;height:8px;border-radius:50%;background:'+(m.en_ligne?'#3AE06E':'rgba(255,255,255,0.25)')+';box-shadow:'+(m.en_ligne?'0 0 8px rgba(58,224,110,0.8)':'none')+'"></span>'+
+      String(m.nom).replace(/</g,'&lt;')+(m.ville?' <span style="color:rgba(212,175,55,0.6)">· '+String(m.ville).replace(/</g,'&lt;')+'</span>':'')+
+      ' <span style="color:rgba(212,175,55,0.8)">💬</span></div>'
+    ).join('');
+  }catch(e){el.innerHTML='<div style="font-size:0.55rem;color:rgba(220,50,50,0.6);font-family:Share Tech Mono,monospace">Annuaire indisponible.</div>';}
+}
+
+// --
+// PROFILS · DÉCOUVERTE · BLOCAGE
+// --
+const INTENTIONS={jaser:'💬 Jaser',rencontre:'☕ Rencontre',cesoir:'🔥 Ce soir',amitie:'🤝 Amitié',serieux:'💛 Sérieux'};
+const IDENTITES={gay:'Gay',lesbienne:'Lesbienne',bi:'Bi',trans:'Trans',nonbinaire:'Non-binaire',queer:'Queer',autre:'Autre'};
+let decFiltreIdentite=null;
+let decFiltreIntention=null, pfIntention='jaser', pfIdentites=[], fmCourant=null;
+
+function ouvrirMonProfil(){
+  if(!CURRENT_USER){showError('⚠ Connecte-toi d\'abord.');openLogin();return;}
+  const box=document.getElementById('pf-intentions');
+  box.innerHTML=Object.entries(INTENTIONS).map(([k,v]

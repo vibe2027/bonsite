@@ -1,0 +1,107 @@
+adá",
+    f_label:"✦ Pase Fundador — Edición Limitada",f_period:"/ año · Renovable · Acceso completo a la plataforma",f_spots:"plazas restantes de 500",
+    btn_founder:"Probar audio ahora",btn_login:"Iniciar sesión",
+    tag_ange:"// Protección · Modo Ángel Guardián",title_ange:"Triple toque.<br><em>Tu seguridad,</em><br>en 3 segundos.",
+    tag_reseau:"// La red se expande",title_reseau:"Una comunidad<br><em>que crece</em>",
+    tag_voix:"// Demo inmediata · Voz primero",title_voix:"Pruébalo<br><em>antes de registrarte</em>",
+    tag_salon:"// Comunidad · Salón Flotante · Tiempo Real",title_salon:"Perfiles que <em>flotan.</em><br>Conexiones que se crean.",
+    title_tribunal:"Justicia impartida<br><em>por la comunidad.</em>",
+    tag_events:"// Comunidad · Próximos Eventos",title_events:"La escena LGBTQ+<br><em>cobra vida.</em>"
+  },
+  tl:{
+    nav_home:"Home",nav_ange:"Angel Mode",nav_voix:"Boses",nav_reseau:"Network",nav_salon:"Salon",nav_tribunal:"Tribunal",
+    hero_sub:"Mas ligtas na LGBTQ+ dating",hero_origin:"Unahin ang audio · larawan mamaya · Quebec → Canada",
+    f_label:"✦ Founder Pass — Limited Edition",f_period:"/ taon · Renewable · Buong access sa platform",f_spots:"natitirang puwesto sa 500",
+    btn_founder:"Subukan ang audio ngayon",btn_login:"Mag-log in",
+    tag_ange:"// Proteksyon · Guardian Angel Mode",title_ange:"Triple-tap.<br><em>Ang iyong kaligtasan,</em><br>sa 3 segundo.",
+    tag_reseau:"// Lumalago ang network",title_reseau:"Isang komunidad<br><em>na lumalago</em>",
+    tag_voix:"// Agarang demo · Boses muna",title_voix:"Subukan muna<br><em>bago mag-sign up</em>",
+    tag_salon:"// Komunidad · Floating Salon · Real Time",title_salon:"Mga profile na <em>lumulutang.</em><br>Mga koneksyong nabubuo.",
+    title_tribunal:"Hustisyang ibinibigay<br><em>ng komunidad.</em>",
+    tag_events:"// Komunidad · Mga Paparating na Event",title_events:"Ang LGBTQ+ scene<br><em>ay nabubuhay.</em>"
+  },
+  it:{
+    nav_home:"Home",nav_ange:"Modalità Angelo",nav_voix:"Voce",nav_reseau:"Rete",nav_salon:"Salotto",nav_tribunal:"Tribunale",
+    hero_sub:"Dating LGBTQ+ più sicuro",hero_origin:"Prova prima l'audio · foto dopo · Québec → Canada",
+    f_label:"✦ Pass Fondatore — Edizione Limitata",f_period:"/ anno · Rinnovabile · Accesso completo alla piattaforma",f_spots:"posti rimasti su 500",
+    btn_founder:"Prova l'audio ora",btn_login:"Accedi",
+    tag_ange:"// Protezione · Modalità Angelo Custode",title_ange:"Triplo tocco.<br><em>La tua sicurezza,</em><br>in 3 secondi.",
+    tag_reseau:"// La rete si espande",title_reseau:"Una comunità<br><em>che cresce</em>",
+    tag_voix:"// Demo immediata · Prima la voce",title_voix:"Provala<br><em>prima di registrarti</em>",
+    tag_salon:"// Comunità · Salotto Fluttuante · Tempo Reale",title_salon:"Profili che <em>fluttuano.</em><br>Connessioni che nascono.",
+    title_tribunal:"Giustizia resa<br><em>dalla comunità.</em>",
+    tag_events:"// Comunità · Prossimi Eventi",title_events:"La scena LGBTQ+<br><em>prende vita.</em>"
+  },
+  de:{
+    nav_home:"Start",nav_ange:"Engel-Modus",nav_voix:"Stimme",nav_reseau:"Netzwerk",nav_salon:"Salon",nav_tribunal:"Tribunal",
+    hero_sub:"Sichereres LGBTQ+ Dating",hero_origin:"Erst Audio · dann Foto · Québec → Kanada",
+    f_label:"✦ Gründer-Pass — Limitierte Edition",f_period:"/ Jahr · Verlängerbar · Voller Plattformzugang",f_spots:"verbleibende Plätze von 500",
+    btn_founder:"Audio jetzt testen",btn_login:"Anmelden",
+    tag_ange:"// Schutz · Schutzengel-Modus",title_ange:"Dreifach tippen.<br><em>Deine Sicherheit,</em><br>in 3 Sekunden.",
+    tag_reseau:"// Das Netzwerk wächst",title_reseau:"Eine Gemeinschaft<br><em>die wächst</em>",
+    tag_voix:"// Sofort-Demo · Stimme zuerst",title_voix:"Teste es<br><em>bevor du dich anmeldest</em>",
+    tag_salon:"// Gemeinschaft · Schwebender Salon · Echtzeit",title_salon:"Profile die <em>schweben.</em><br>Verbindungen die entstehen.",
+    title_tribunal:"Gerechtigkeit<br><em>durch die Gemeinschaft.</em>",
+    tag_events:"// Gemeinschaft · Kommende Events",title_events:"Die LGBTQ+ Szene<br><em>erwacht.</em>"
+  },
+  pt:{
+    nav_home:"Início",nav_ange:"Modo Anjo",nav_voix:"Voz",nav_reseau:"Rede",nav_salon:"Salão",nav_tribunal:"Tribunal",
+    hero_sub:"Dating LGBTQ+ mais seguro",hero_origin:"Teste o áudio primeiro · foto depois · Quebec → Canadá",
+    f_label:"✦ Passe Fundador — Edição Limitada",f_period:"/ ano · Renovável · Acesso completo à plataforma",f_spots:"vagas restantes de 500",
+    btn_founder:"Testar áudio agora",btn_login:"Entrar",
+    tag_ange:"// Proteção · Modo Anjo da Guarda",title_ange:"Toque triplo.<br><em>Sua segurança,</em><br>em 3 segundos.",
+    tag_reseau:"// A rede se expande",title_reseau:"Uma comunidade<br><em>que cresce</em>",
+    tag_voix:"// Demo imediata · A voz primeiro",title_voix:"Teste<br><em>antes de se inscrever</em>",
+    tag_salon:"// Comunidade · Salão Flutuante · Tempo Real",title_salon:"Perfis que <em>flutuam.</em><br>Conexões que se criam.",
+    title_tribunal:"Justiça feita<br><em>pela comunidade.</em>",
+    tag_events:"// Comunidade · Próximos Eventos",title_events:"A cena LGBTQ+<br><em>ganha vida.</em>"
+  },
+  ru:{
+    nav_home:"Главная",nav_ange:"Режим Ангела",nav_voix:"Голос",nav_reseau:"Сеть",nav_salon:"Салон",nav_tribunal:"Трибунал",
+    hero_sub:"Более безопасные LGBTQ+ знакомства",hero_origin:"Сначала аудио · потом фото · Квебек → Канада",
+    f_label:"✦ Пропуск Основателя — Лимитированный",f_period:"/ год · Продлеваемый · Полный доступ к платформе",f_spots:"мест осталось из 500",
+    btn_founder:"Попробовать аудио",btn_login:"Войти",
+    tag_ange:"// Защита · Режим Ангела-Хранителя",title_ange:"Тройное касание.<br><em>Ваша безопасность,</em><br>за 3 секунды.",
+    tag_reseau:"// Сеть расширяется",title_reseau:"Сообщество<br><em>которое растёт</em>",
+    tag_voix:"// Мгновенное демо · Сначала голос",title_voix:"Попробуй<br><em>до регистрации</em>",
+    tag_salon:"// Сообщество · Плавающий салон · В реальном времени",title_salon:"Профили, которые <em>парят.</em><br>Связи, которые рождаются.",
+    title_tribunal:"Правосудие<br><em>от сообщества.</em>",
+    tag_events:"// Сообщество · Предстоящие события",title_events:"ЛГБТК+ сцена<br><em>оживает.</em>"
+  }
+};
+function setLang(lang){
+  const dict=I18N[lang];if(!dict)return;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');if(dict[k]!==undefined)el.textContent=dict[k];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-html');if(dict[k]!==undefined)el.innerHTML=dict[k];
+  });
+  document.getElementById('langCurrent').textContent=lang.toUpperCase();
+  document.documentElement.setAttribute('lang',lang);
+  document.querySelectorAll('.lang-menu button').forEach(b=>{
+    b.classList.toggle('active',b.getAttribute('data-lang')===lang);
+  });
+  document.getElementById('langMenu').classList.remove('open');
+}
+
+
+// --
+// SALON DE LA VOIX — démo audio (adapté de Lumina Spark)
+// SpeechSynthesis natif : fait vraiment parler le navigateur
+// --
+(function(){
+  const SCRIPT=[
+    {who:"Léo · 28",text:"Salut… c'est mon premier salon. J'avoue je suis nerveux.",pitch:1.05,rate:0.95},
+    {who:"Sam · 34",text:"Bienvenue Léo. Y'a personne qui va te juger icitte. Juste des voix.",pitch:0.85,rate:0.92},
+    {who:"Léo · 28",text:"C'est weird hein… j'ai pas eu à swiper, à liker, à rien.",pitch:1.05,rate:0.97},
+    {who:"Sam · 34",text:"C'est ça l'idée. Tu parles quand t'es prêt. Pis on écoute.",pitch:0.85,rate:0.9},
+    {who:"Léo · 28",text:"Merci. Honnêtement… ça fait du bien.",pitch:1.05,rate:0.93}
+  ];
+  const WAVE_BARS=32;
+  let playing=false, cancelled=false, waveTimer=null;
+  const synth=('speechSynthesis' in window)?window.speechSynthesis:null;
+  const waveBox=document.getElementById('voixWave');
+  const transcript=document.getElementById('voixTranscript');
+  const dot=document.getElementById('voixDot');
+  const statusEl=document.getElementById('v

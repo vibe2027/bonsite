@@ -1,0 +1,117 @@
+ent(CURRENT_USER.id);
+}
+async function voirMesVisites(){
+  if(!CURRENT_USER){showError('⚠ Connecte-toi.');openLogin();return;}
+  try{
+    const {data}=await _supa.rpc('qui_ma_vu');
+    if(data&&data.ok===false){
+      if(data.error==='achat_requis'){showError('⚠ Achète "Qui m\'a consulté" pour voir la liste.');}
+      return;
+    }
+    const liste=data||[];
+    if(!liste.length){showSuccess('Personne n\'a consulté ton profil récemment.');return;}
+    const texte=liste.slice(0,10).map(v=>v.nom).join(', ');
+    showSuccess('👁 T\'as été vu par : '+texte+(liste.length>10?'...':''));
+  }catch(e){showError('⚠ Erreur.');}
+}
+async function chargerDecouverte(){
+  const el=document.getElementById('annuaire-membres');if(!el)return;
+  renduIntChips();
+  if(!CURRENT_USER){
+    el.innerHTML='<div style="grid-column:1/-1;font-size:0.55rem;letter-spacing:2px;color:rgba(255,255,255,0.4);font-family:Share Tech Mono,monospace;padding:14px 0">Connecte-toi pour découvrir les membres. <a href="#" onclick="openLogin();return false" style="color:#D4AF37">Connexion →</a></div>';
+    return;
+  }
+  try{
+    const pos=await obtenirMaPosition();
+    const ville=document.getElementById('dec-ville')?.value.trim()||null;
+    const {data,error}=await _supa.rpc('decouverte',{p_ville:ville||null,p_intention:decFiltreIntention,p_age_min:18,p_age_max:99,p_lat:pos?.lat??null,p_lon:pos?.lon??null,p_identite:decFiltreIdentite});
+    if(error)throw error;
+    if(data&&data.ok===false){el.innerHTML='';return;}
+    const membres=data||[];
+    if(!membres.length){el.innerHTML='<div style="grid-column:1/-1;font-size:0.55rem;letter-spacing:2px;color:rgba(255,255,255,0.4);font-family:Share Tech Mono,monospace;padding:14px 0">Aucun membre avec ces filtres. Sois le premier à compléter ton profil ✦</div>';return;}
+    el.innerHTML=membres.map(m=>{
+      const nom=escHtml(m.nom);
+      const photo=m.photo?'<img src="'+escHtml(m.photo)+'" alt="Photo de '+nom+'" style="width:100%;height:100%;object-fit:cover" loading="lazy">':'<span style="font-size:1.6rem;color:rgba(212,175,55,0.5)">✦</span>';
+      return '<div onclick=\'ouvrirFiche('+JSON.stringify(m).replace(/'/g,"&#39;")+')\' style="cursor:pointer;border:1px solid rgba(212,175,55,0.3);background:rgba(255,255,255,0.02)">'+
+        '<div style="width:100%;aspect-ratio:1;background:rgba(212,175,55,0.06);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">'+photo+
+        (m.en_ligne?'<span style="position:absolute;top:8px;right:8px;width:11px;height:11px;border-radius:50%;background:#3AE06E;box-shadow:0 0 10px rgba(58,224,110,0.9);border:2px solid #0a0a10"></span>':'')+
+        (m.verifie?'<span style="position:absolute;bottom:8px;right:8px;background:#D4AF37;color:#000;font-size:0.5rem;padding:2px 6px;font-family:Share Tech Mono,monospace">✓</span>':'')+
+        (m.fondateur?'<span style="position:absolute;top:8px;left:8px;background:#D4AF37;color:#000;font-size:0.42rem;letter-spacing:1px;padding:2px 6px;font-family:Share Tech Mono,monospace;font-weight:bold">✦ PIONNIER</span>':'')+
+        (m.boost?'<span style="position:absolute;top:'+(m.fondateur?'26px':'8px')+';left:8px;background:#00EEFF;color:#000;font-size:0.42rem;letter-spacing:1px;padding:2px 6px;font-family:Share Tech Mono,monospace;font-weight:bold">🚀 BOOSTÉ</span>':'')+'</div>'+
+        '<div style="padding:9px 10px;font-family:Share Tech Mono,monospace">'+
+        '<div style="font-size:0.58rem;letter-spacing:1px;color:#fff">'+nom+(m.age?' · '+m.age:'')+'</div>'+
+        '<div style="font-size:0.46rem;letter-spacing:1px;color:rgba(212,175,55,0.75);margin-top:3px">'+(INTENTIONS[m.intention]||'')+(m.ville?' · '+String(m.ville).replace(/</g,'&lt;'):'')+'</div>'+
+        (m.distance_km!=null?'<div style="font-size:0.44rem;letter-spacing:1px;color:rgba(0,238,255,0.75);margin-top:2px">📍 '+(m.distance_km<1?'moins de 1 km':m.distance_km+' km')+'</div>':'')+
+        '</div></div>';
+    }).join('');
+  }catch(e){el.innerHTML='<div style="grid-column:1/-1;font-size:0.55rem;color:rgba(220,50,50,0.6);font-family:Share Tech Mono,monospace">Découverte indisponible.</div>';}
+}
+function ouvrirFiche(m){
+  fmCourant=m;
+  document.getElementById('fm-photo').innerHTML=m.photo?'<img src="'+escHtml(m.photo)+'" alt="Photo de '+escHtml(m.nom)+'" style="width:100%;height:100%;object-fit:cover">':'✦';
+  document.getElementById('fm-nom').textContent=m.nom+(m.age?' · '+m.age:'');
+  document.getElementById('fm-meta').textContent=(m.ville||'')+(m.distance_km!=null?'  ·  📍 '+(m.distance_km<1?'< 1 km':m.distance_km+' km'):'')+(m.verifie?'  ·  ✓ PHOTO VÉRIFIÉE':'')+(m.fondateur?'  ·  ✦ PIONNIER':'')+(m.boost?'  ·  🚀 BOOSTÉ':'')+(m.en_ligne?'  ·  EN LIGNE':'');
+  document.getElementById('fm-intention').textContent=(Array.isArray(m.identites)&&m.identites.length?m.identites.map(k=>IDENTITES[k]||k).join(' · ')+'  ·  ':'')+(INTENTIONS[m.intention]||'');
+  document.getElementById('fm-bio').textContent=m.bio||'';
+  document.getElementById('fiche-modal').classList.add('open');
+  if(m.id)_supa.rpc('enregistrer_vue',{p_vu_id:m.id}).then(()=>{}).catch(()=>{});
+}
+function fmEcrire(){
+  if(!fmCourant)return;
+  document.getElementById('fiche-modal').classList.remove('open');
+  ouvrirPrive(fmCourant.id,fmCourant.nom);
+}
+async function fmBloquer(){
+  if(!fmCourant||!CURRENT_USER)return;
+  try{
+    await _supa.from('blocages').insert({bloqueur:CURRENT_USER.id,bloque:fmCourant.id});
+    document.getElementById('fiche-modal').classList.remove('open');
+    showSuccess('⛔ Membre bloqué. Il peut plus t\'écrire et tu le verras plus.');
+    chargerDecouverte();
+  }catch(e){showError('⚠ Déjà bloqué ou erreur.');}
+}
+async function fmSignaler(){
+  if(!fmCourant)return;
+  try{
+    await _supa.from('tribunal_signalements').insert({
+      pseudo_reporter:CURRENT_USER?.user_metadata?.prenom||'Membre',
+      motif:'Signalement de profil : '+fmCourant.nom,
+      details:'Profil signalé depuis la découverte (id: '+fmCourant.id+')',
+      statut:'en_examen'
+    });
+    document.getElementById('fiche-modal').classList.remove('open');
+    showSuccess('⚑ Signalement transmis au Tribunal.');
+  }catch(e){showError('⚠ Erreur de signalement.');}
+}
+
+async function bloquerDepuisPrive(){
+  if(!priveAvec||!CURRENT_USER)return;
+  try{
+    await _supa.from('blocages').insert({bloqueur:CURRENT_USER.id,bloque:priveAvec});
+    fermerPrive();
+    showSuccess('⛔ Membre bloqué.');
+    chargerDecouverte();
+  }catch(e){showError('⚠ Déjà bloqué ou erreur.');}
+}
+</script>
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal-box">
+    <div class="modal-title">Nouveau mot de passe</div>
+    <div style="font-size:0.5rem;color:rgba(212,175,55,0.6);letter-spacing:2px;margin-bottom:18px;font-family:Share Tech Mono,monospace">// Choisis ton nouveau mot de passe //</div>
+    <form id="reset-form" onsubmit="handleResetPassword(event)">
+      <div class="form-group">
+        <label class="form-label">Nouveau mot de passe</label>
+        <input class="form-field" type="password" id="reset-pass1" minlength="8" placeholder="Minimum 8 caractères" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirme-le</label>
+        <input class="form-field" type="password" id="reset-pass2" minlength="8" placeholder="Encore une fois" required>
+      </div>
+      <button type="submit" class="modal-submit">Enregistrer ✦</button>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="prive-modal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-title" style="font-size:0.85rem;display:flex;justify-content:space-between;align-items:center">Privé · <span id="prive-nom" style="color:#D4AF37;flex:1;margin-left:6px"></span>
+      <button type="button" onclick="bloquerDepuisPrive()" title="Bloquer" style="background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);padding:6px 10px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:1px;cursor:po

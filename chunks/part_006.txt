@@ -1,0 +1,191 @@
+rm:translate(9px,-6px)}60%{transform:translate(-6px,-5px)}80%{transform:translate(8px,6px)}}
+
+/* -- GLASSMORPHISM & SALONS STYLE -- */
+.glass-panel {
+  background: rgba(20, 20, 30, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 14px;
+}
+
+.salon-card {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.salon-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+#salon-chatbox {
+  background: rgba(20, 20, 30, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 238, 255, 0.1);
+}
+
+.msg-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(5px);
+}
+
+#live-chat-msgs::-webkit-scrollbar {
+  width: 4px;
+}
+#live-chat-msgs::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+<!-- SÉLECTEUR DE LANGUE -->
+<div class="lang-select">
+  <button class="lang-btn" onclick="document.getElementById('langMenu').classList.toggle('open')">🌐 <span id="langCurrent">FR</span></button>
+  <div class="lang-menu" id="langMenu">
+    <button onclick="setLang('fr')" data-lang="fr">Français</button>
+    <button onclick="setLang('en')" data-lang="en">English</button>
+    <button onclick="setLang('zh')" data-lang="zh">中文</button>
+    <button onclick="setLang('pa')" data-lang="pa">ਪੰਜਾਬੀ</button>
+    <button onclick="setLang('es')" data-lang="es">Español</button>
+    <button onclick="setLang('tl')" data-lang="tl">Tagalog</button>
+    <button onclick="setLang('it')" data-lang="it">Italiano</button>
+    <button onclick="setLang('de')" data-lang="de">Deutsch</button>
+    <button onclick="setLang('pt')" data-lang="pt">Português</button>
+    <button onclick="setLang('ru')" data-lang="ru">Русский</button>
+  </div>
+</div>
+
+
+<!-- CANVAS LAYERS -->
+<canvas id="universe-canvas"></canvas>
+
+<!-- NOTIFS -->
+<div class="notif notif-success" id="notif-success"></div>
+<div class="notif notif-error" id="notif-error"></div>
+
+<!-- HUD -->
+<header class="hud">
+  <div class="hud-brand">
+    VIBE
+    <span>RÉSEAU LGBTQ+ · QUÉBEC</span>
+  </div>
+  <nav class="hud-nav">
+    <a href="#accueil" data-i18n="nav_home">Accueil</a>
+    <a href="#ange-section" data-i18n="nav_ange">Mode Ange</a>
+    <a href="#voix-section" data-i18n="nav_voix">Voix</a>
+    <a href="#reseau-section" data-i18n="nav_reseau">Réseau</a>
+    <a href="#salon-section" data-i18n="nav_salon">Salon</a>
+    <a href="#boutique-section">Extras</a>
+    <a href="#tribunal-section" data-i18n="nav_tribunal">Tribunal</a>
+    <a href="#inscription">Rejoindre</a>
+  </nav>
+  <div class="hud-right">
+    <div class="hud-status">
+      <div class="pulse-dot"></div>
+      <span id="hud-online">ESSAI AUDIO PRÊT</span>
+    </div>
+    <button class="hud-connexion" onclick="openLogin()">Connexion</button>
+  </div>
+</header>
+
+<!-- LIVE DATA HUD -->
+<div class="live-hud">
+  <div class="lhud-item"><span class="lhud-val">AUDIO</span><span class="lhud-lbl">Avant photo</span></div>
+  <div class="lhud-item"><span class="lhud-val">ANGE</span><span class="lhud-lbl">Protection active</span></div>
+  <div class="lhud-item"><span class="lhud-val">PRIVÉ</span><span class="lhud-lbl">Sans swipe</span></div>
+  <div class="lhud-item"><span class="lhud-val">WEB</span><span class="lhud-lbl">Essai immédiat</span></div>
+  <div class="lhud-item"><span class="lhud-val" style="color:#00eeff">NATIF</span><span class="lhud-lbl">iPhone + Android bientôt</span></div>
+</div>
+
+<!-- HERO -->
+<section id="accueil">
+  <div class="hero-scan"></div>
+  <div class="hero-content" style="position:relative;z-index:2">
+
+    <div class="logo-system">
+      <div class="orbit-ring r1"></div>
+      <div class="orbit-ring r2"></div>
+      <div class="orbit-ring r3"></div>
+      <div class="logo-core">
+        <canvas id="dna-canvas" width="180" height="180"></canvas>
+      </div>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="ht-v">V</span><span class="ht-ibe">IBE</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">Rencontre LGBTQ+ plus sûre</p>
+    <p class="hero-origin" data-i18n="hero_origin">Teste l'audio d'abord · photo ensuite · Québec → Canada</p>
+
+    <div class="pride-bar">
+      <div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div>
+      <div class="pb pb4"></div><div class="pb pb5"></div><div class="pb pb6"></div>
+      <div class="pb pb7"></div><div class="pb pb8"></div>
+    </div>
+
+    <div class="hero-value-block">
+      <div class="hero-kicker">Essai immédiat · aucune photo requise</div>
+      <div class="hero-promise">Rencontre avec plus de contrôle · audio d'abord.</div>
+      <p class="hero-copy">VIBE te laisse écouter avant de voir, entrer dans des salons privés sans swipe, puis activer ton Mode Ange si une rencontre devient inconfortable.</p>
+      <div class="hero-points">
+        <div class="hero-point">🎙 Audio avant photo</div>
+        <div class="hero-point">🛡️ Mode Ange en 3 taps</div>
+        <div class="hero-point">🔒 Contrôle · discrétion · modération</div>
+      </div>
+      <div class="hero-transition-note">Disponible maintenant en web app · apps iPhone et Android en préparation</div>
+    </div>
+
+    <div class="hero-btns">
+      <a href="#voix-section" class="btn-gold"><span data-i18n="btn_founder">Tester l'audio maintenant</span></a>
+      <a href="#inscription" class="btn-outline">Continuer sur le web</a>
+    </div>
+    <div class="hero-inline-note">1 clic pour écouter · inscription ensuite</div>
+  </div>
+</section>
+
+<!-- SALON DE LA VOIX -->
+<section id="voix-section">
+  <p class="section-tag" data-i18n="tag_voix">// Test immédiat · La voix d'abord</p>
+  <h2 class="section-title" data-i18n-html="title_voix">Essaie<br><em>avant de t'inscrire</em></h2>
+  <p class="section-body" style="max-width:620px;margin:0 auto 8px">Pas de photo. Pas de bio à juger. Lance l'audio, écoute l'ambiance, puis décide si VIBE est pour toi.</p>
+
+  <div class="voix-demo">
+    <div class="voix-demo-head">
+      <span class="voix-demo-tag">✦ Démo immédiate · Salon à voix</span>
+      <span class="voix-demo-status"><span class="voix-dot" id="voixDot"></span><span id="voixStatus">PRÊT</span></span>
+    </div>
+    <div class="voix-wavebox" id="voixWave"></div>
+    <div class="voix-transcript" id="voixTranscript">
+      <span class="voix-idle">— Appuie sur ▶ pour entendre comment une rencontre peut commencer sans photo. —</span>
+    </div>
+    <div class="voix-demo-foot">
+      <button class="voix-play" id="voixPlay" onclick="toggleVoixDemo()"><span id="voixPlayIcon">▶</span>&nbsp;<span id="voixPlayLabel">Écouter la démo</span></button>
+      <span class="voix-demo-meta">audio immersif · sans photo · sans swipe</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROOFS -->
+<div class="stats-strip">
+  <div class="stat-cell"><span class="stat-l"><strong>Audio d'abord</strong>Écoute avant de voir</span></div>
+  <div class="stat-cell"><span class="stat-l"><strong>Mode Ange</strong>Protection active en 3 taps</span></div>
+  <div class="stat-cell"><span class="stat-l"><strong>Salons privés</strong>Présence en temps réel, plus discrète</span></div>
+  <div class="stat-cell"><span class="stat-l"><strong>Web → natif</strong>Commence maintenant, continue plus tard sur stores</span></div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker"><span class="ticker-inner">
+  VIBE · LGBTQ+ · QUÉBEC · MONTRÉAL · TORONTO · VANCOUVER · OTTAWA · CALGARY · MODE ANGE · PROTECTION ACTIVE · SALON FLOTTANT · TRIBUNAL COMMUNAUTAIRE · PIONNIERS · 99$/AN · R

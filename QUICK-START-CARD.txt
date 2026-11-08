@@ -1,0 +1,76 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║  🚀 VIBE QUICK START - WHAT TO DO NOW                                  ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+🔴 CRITICAL PATH (Do these TODAY):
+
+1. FILL .env FILE
+   File: .env.production.template
+   Copy your Supabase & Stripe keys into it
+
+2. DEPLOY ON NETLIFY (https://app.netlify.com)
+   - New site from Git
+   - Select vibe2027/VIBE
+   - Add 10 env variables
+   - Click Deploy
+   - Wait for green ✅
+
+3. TEST IT WORKS
+   curl https://vibegay.ca/api/health
+   Response should show: "status":"ok"
+
+4. SETUP MONITORING (https://uptimerobot.com)
+   - Sign up free
+   - Add monitor URL: https://vibegay.ca/api/health
+   - Email alerts
+
+5. ADD SLACK ALERTS (https://api.slack.com/apps)
+   - Create app
+   - Get webhook URL
+   - Add to GitHub secrets
+
+═════════════════════════════════════════════════════════════════════════
+
+🟡 NEXT STEPS (This week):
+
+6. Deploy Railway fallback (https://railway.app)
+7. Test failover procedure
+8. Read INCIDENT-PLAYBOOK.md
+
+═════════════════════════════════════════════════════════════════════════
+
+USEFUL COMMANDS:
+
+# Test site locally
+npm run dev
+
+# Run healthcheck manually
+bash scripts/healthcheck.sh
+
+# View GitHub Actions logs
+https://github.com/vibe2027/VIBE/actions
+
+# Emergency: Switch to Railway
+# Go to DNS provider, change CNAME to Railway URL
+
+═════════════════════════════════════════════════════════════════════════
+
+LINKS YOU NEED:
+
+Netlify:        https://app.netlify.com
+UptimeRobot:    https://uptimerobot.com
+Railway:        https://railway.app
+Slack apps:     https://api.slack.com/apps
+GitHub secrets: https://github.com/vibe2027/VIBE/settings/secrets/actions
+Supabase:       https://app.supabase.com
+Stripe:         https://dashboard.stripe.com
+
+═════════════════════════════════════════════════════════════════════════
+
+QUESTIONS?
+
+Read: DEPLOYMENT-CHECKLIST.md (step-by-step)
+Read: INCIDENT-PLAYBOOK.md (if something breaks)
+Read: PRODUCTION-RESILIENCE-PLAN.md (full strategy)
+
+═════════════════════════════════════════════════════════════════════════

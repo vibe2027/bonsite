@@ -1,0 +1,85 @@
+inter">⛔</button>
+    </div>
+    <div style="font-size:0.46rem;color:rgba(212,175,55,0.55);letter-spacing:2px;margin-bottom:12px;font-family:Share Tech Mono,monospace">// Seulement vous deux voyez ces messages //</div>
+    <div id="prive-msgs" style="height:260px;overflow-y:auto;border:0.5px solid rgba(212,175,55,0.2);padding:12px;margin-bottom:12px;background:rgba(0,0,0,0.35);font-family:Share Tech Mono,monospace;font-size:0.58rem;line-height:2"></div>
+    <div style="display:flex;gap:8px">
+      <input type="file" id="prive-photo" accept="image/*" style="display:none" onchange="envoyerPhotoPrive(this)">
+      <button type="button" onclick="document.getElementById('prive-photo').click()" style="width:auto;padding:0 12px;background:transparent;border:1px solid rgba(212,175,55,0.4);color:#D4AF37;cursor:pointer" title="Envoyer une photo">📷</button>
+      <input class="form-field" type="text" id="prive-input" maxlength="1000" placeholder="Ton message privé..." style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();envoyerPrive();}">
+      <button type="button" class="modal-submit" style="width:auto;padding:0 18px;margin:0" onclick="envoyerPrive()">↗</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="profil-modal">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-title" style="font-size:0.85rem">Mon profil</div>
+    <div style="font-size:0.46rem;color:rgba(212,175,55,0.55);letter-spacing:2px;margin-bottom:14px;font-family:Share Tech Mono,monospace">// C'est ta carte de visite dans la découverte //</div>
+    <form onsubmit="sauverProfil(event)">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div id="pf-photo-prev" style="width:78px;height:78px;border-radius:50%;border:1.5px solid rgba(212,175,55,0.6);background:rgba(212,175,55,0.08);display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;flex-shrink:0">✦</div>
+        <label style="border:1px solid rgba(212,175,55,0.5);padding:10px 16px;font-size:0.52rem;letter-spacing:2px;color:#D4AF37;cursor:pointer;font-family:Share Tech Mono,monospace">CHOISIR MA PHOTO
+          <input type="file" id="pf-photo" accept="image/*" style="display:none" onchange="previsPhoto(this)">
+        </label>
+      </div>
+      <div class="form-group"><label class="form-label">Nom affiché</label>
+        <input class="form-field" type="text" id="pf-nom" maxlength="30" placeholder="Ton nom ou pseudo" required></div>
+      <div style="display:flex;gap:10px">
+        <div class="form-group" style="flex:1"><label class="form-label">Âge</label>
+          <input class="form-field" type="number" id="pf-age" min="18" max="99" placeholder="18+" required></div>
+        <div class="form-group" style="flex:2"><label class="form-label">Ville</label>
+          <input class="form-field" type="text" id="pf-ville" maxlength="40" placeholder="Québec" required></div>
+      </div>
+      <div class="form-group"><label class="form-label">Langue préférée (traduction des messages privés)</label>
+        <select class="form-field" id="pf-langue">
+          <option value="fr">Français</option><option value="en">English</option>
+          <option value="es">Español</option><option value="ru">Русский</option>
+          <option value="pt">Português</option><option value="de">Deutsch</option>
+          <option value="it">Italiano</option><option value="zh">中文</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Intention du moment</label>
+        <div id="pf-intentions" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px"></div></div>
+      <div class="form-group"><label class="form-label">Identité (choix multiples)</label>
+        <div id="pf-identites" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px"></div></div>
+      <div class="form-group"><label class="form-label">Bio</label>
+        <textarea class="form-field" id="pf-bio" maxlength="300" placeholder="Qui t'es, qu'est-ce que tu cherches..." style="height:70px;resize:none"></textarea></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="pf-partage-distance" checked style="width:16px;height:16px;accent-color:#D4AF37">
+        <label for="pf-partage-distance" style="font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:1px;color:rgba(255,255,255,0.75)">📍 Montrer ma distance aux autres membres (jamais ta position exacte — juste la distance approximative)</label>
+      </div>
+      <button type="submit" class="modal-submit" id="pf-save">Enregistrer mon profil ✦</button>
+      <div id="pf-carte-lien" style="display:none;text-align:center;margin-top:14px">
+        <a href="#" onclick="ouvrirCartePionnier();return false" style="color:#D4AF37;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:2px;text-decoration:underline">✦ Voir ma carte Pionnier</a>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="carte-pionnier-modal">
+  <div class="modal-box" style="max-width:340px;text-align:center">
+    <div id="carte-pionnier-contenu" style="border:1px solid #D4AF37;background:linear-gradient(155deg,rgba(212,175,55,0.14),rgba(0,0,0,0.85));padding:28px 20px;font-family:Share Tech Mono,monospace">
+      <div style="font-size:0.5rem;letter-spacing:4px;color:rgba(212,175,55,0.7)">VIBE · RÉSEAU LGBTQ+</div>
+      <div style="font-family:Playfair Display,serif;font-size:1.6rem;color:#D4AF37;margin:14px 0 4px">✦ PIONNIER</div>
+      <div id="cp-numero" style="font-size:1.1rem;letter-spacing:3px;color:#fff;margin-bottom:14px">N° —</div>
+      <div id="cp-nom" style="font-size:0.6rem;letter-spacing:2px;color:rgba(255,255,255,0.85)"></div>
+      <div id="cp-depuis" style="font-size:0.44rem;letter-spacing:1px;color:rgba(255,255,255,0.45);margin-top:6px"></div>
+    </div>
+    <button onclick="document.getElementById('carte-pionnier-modal').classList.remove('open')" style="margin-top:16px;background:transparent;border:1px solid rgba(212,175,55,0.4);color:#D4AF37;padding:8px 20px;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:2px;cursor:pointer">FERMER</button>
+  </div>
+</div>
+<div class="modal-overlay" id="fiche-modal">
+  <div class="modal-box" style="max-width:400px;text-align:center">
+    <div id="fm-photo" style="width:110px;height:110px;border-radius:50%;border:1.5px solid rgba(212,175,55,0.7);margin:0 auto 14px;background:rgba(212,175,55,0.08);display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden">✦</div>
+    <div id="fm-nom" style="font-family:Playfair Display,serif;font-size:1.15rem;color:#fff"></div>
+    <div id="fm-meta" style="font-size:0.52rem;letter-spacing:2px;color:rgba(212,175,55,0.85);margin:8px 0 4px;font-family:Share Tech Mono,monospace"></div>
+    <div id="fm-intention" style="font-size:0.5rem;letter-spacing:2px;color:rgba(255,255,255,0.6);margin-bottom:12px;font-family:Share Tech Mono,monospace"></div>
+    <div id="fm-bio" style="font-size:0.58rem;line-height:1.9;color:rgba(255,255,255,0.72);margin-bottom:18px"></div>
+    <button class="modal-submit" style="margin-bottom:10px" onclick="fmEcrire()">💬 Écrire en privé</button>
+    <div style="display:flex;gap:10px">
+      <button type="button" onclick="fmSignaler()" style="flex:1;background:transparent;border:1px solid rgba(220,50,50,0.45);color:rgba(220,50,50,0.85);padding:11px;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:2px;cursor:pointer">⚑ SIGNALER</button>
+      <button type="button" onclick="fmBloquer()" style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);padding:11px;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:2px;cursor:pointer">⛔ BLOQUER</button>
+    </div>
+  </div>
+</div>
+<div id="verdict-overlay">
+  <canvas id="verdict-fx"></canvas>
+  <div class="verdict-text" id="verdict-text"></div>
+  <div class

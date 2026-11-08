@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIBE Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      font-size: 36px;
+      color: #D4AF37;
+      margin-bottom: 10px;
+    }
+
+    .logo p {
+      color: #b0b0b0;
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: none;
+      color: #b0b0b0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      color: #D4AF37;
+      border-bottom-color: #D4AF37;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin: 20px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #D4AF37;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #D4AF37;
+      background: rgba(212, 175, 55, 0.1);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert.success {
+      background: rgba(39, 174, 96, 0.2);
+      border: 1px solid #27ae60;
+      color: #2ecc71;
+    }
+
+    .alert.error {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+
+    .divider span {
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .divider p {
+      color: #b0b0b0;
+      font-size: 12px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #D4AF37;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-top: 2px solid #D4AF37;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <h1>🌊 VIBE</h1>
+      <p>Authentic Connection for LGBTQ+ Community</p>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login Tab -->
+    <div id="login" class="tab-content active">
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
+        </div>
+        <div class="loading" id="loginLoading">
+          <div class="spinner"></div>
+          <p>Signing in...</p>
+        </div>
+        <button type="submit" id="loginBtn">Sign In</button>
+      </form>
+    </div>
+
+    <!-- Signup Tab -->
+    <div id="signup" class="tab-content">
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signupEmail" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" required placeholder="Your Name">
+        </div>
+        <div class="form-group">
+          <label>Region</label>
+          <select id="signupRegion" required>
+            <option value="">Select Region...</option>
+            <option value="Gaspésie">Gaspésie</option>
+            <option value="Montréal">Montréal</option>
+            <option value="Toronto">Toronto</option>
+            <option value="Vancouver">Vancouver</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" id="signupConfirm" required placeholder="••••••••">
+        </div>
+        <div class="loading" id="signupLoading">
+          <div class="spinner"></div>
+          <p>Creating account...</p>
+        </div>
+        <button type="submit" id="signupBtn">Create Account</button>
+      </form>
+    </div>
+
+    <div class="divider">
+      <span></span>
+      <p>VIBE — Avec Humilité et Respect</p>
+      <span></span>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showAlert(message, type = 'success') {
+      const alert = document.getElementById('alert');
+      alert.textContent = message;
+      alert.className = `alert show ${type}`;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      document.getElementById('loginLoading').style.display = 'block';
+      document.getElementById('loginBtn').disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          showAlert(error.error || 'Login failed', 'error');
+          throw new Error(error.error);
+        }
+
+        const data = await response.json();
+
+        // Store auth data
+        localStorage.setItem('authToken', data.session.access_token);
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('userRole', data.user.role || 'user');
+
+        // Redirect based on role
+        if (data.user.role === 'admin') {
+          window.location.href = '/admin-dashboard-ui.html';
+        } else if (data.user.role === 'co_founder') {
+          window.location.href = '/co-founder-dashboard.html';
+        } else {
+          window.location.href = '/index.html';
+        }
+      } catch (err) {
+        showAlert(err.message || 'An error occurred', 'error');
+      } finally {
+        document.getElementById('loginLoading').style.display = 'none';
+        document.getElementById('loginBtn').disabled = false;
+      }
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+
+      if (password !== confirm) {
+        showAlert('Passwords do not match', 'error');
+        return;
+      }
+
+      const email = document.getElementById('signupEmail').value;
+      const fullName = document.getElementById('signupName').value;
+      const region = document.getElementById('signupRegion').value;
+
+      document.getElementById('signupLoading').style.display = 'block';
+      document.getElementById('signupBtn').disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password,
+            fullName,
+            region
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          showAlert(error.error || 'Signup failed', 'error');
+          throw new Error(error.error);
+        }
+
+        const data = await response.json();
+        showAlert(data.message || 'Account created! Check your email to verify.', 'success');
+
+        // Clear form
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupName').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupConfirm').value = '';
+
+        // Switch back to login
+        setTimeout(() => {
+          switchTab('login');
+        }, 2000);
+      } catch (err) {
+        showAlert(err.message || 'An error occurred', 'error');
+      } finally {
+        document.getElementById('signupLoading').style.display = 'none';
+        document.getElementById('signupBtn').disabled = false;
+      }
+    }
+
+    // Check if already logged in
+    window.addEventListener('load', () => {
+      const token = localStorage.getItem('authToken');
+      const role = localStorage.getItem('userRole');
+
+      if (token && role) {
+        if (role === 'admin') {
+          window.location.href = '/admin-dashboard-ui.html';
+        } else if (role === 'co_founder') {
+          window.location.href = '/co-founder-dashboard.html';
+        } else {
+          window.location.href = '/index.html';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

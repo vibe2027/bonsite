@@ -1,0 +1,10 @@
+{
+  "name": "VIBE",
+  "description": "VIBE - Dating platform",
+  "builder": "nixpacks",
+  "services": {
+    "web": {
+      "port": 3000
+    }
+  }
+}

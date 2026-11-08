@@ -1,0 +1,118 @@
+ÉSEAU SÉCURISÉ · DONNÉES SOUVERAINES · FIERTÉ · COMMUNAUTÉ ·&nbsp;
+  VIBE · LGBTQ+ · QUÉBEC · MONTRÉAL · TORONTO · VANCOUVER · OTTAWA · CALGARY · MODE ANGE · PROTECTION ACTIVE · SALON FLOTTANT · TRIBUNAL COMMUNAUTAIRE · PIONNIERS · 99$/AN · RÉSEAU SÉCURISÉ · DONNÉES SOUVERAINES · FIERTÉ · COMMUNAUTÉ ·&nbsp;
+</span></div>
+
+<!-- ANGE GARDIEN -->
+<section id="ange-section">
+  <div class="ange-bg-glow"></div>
+  <div class="ange-content">
+    <p class="section-tag" data-i18n="tag_ange">// Protection · Mode Ange Gardien</p>
+    <h2 class="section-title" data-i18n-html="title_ange">Triple-tap.<br><em>Ta sécurité,</em><br>en 3 secondes.</h2>
+    <p class="section-body" style="margin-bottom:24px">
+      Trois taps rapides sur l'écran. Ta position GPS exacte et 30 secondes d'audio ambiant partent instantanément à ton contact de confiance. Silencieux. Invisible. Toujours actif en arrière-plan.
+    </p>
+    <div class="ange-stats-row">
+      <div class="astat"><span class="astat-n" id="sos-count">0</span><span class="astat-l">Alertes envoyées</span></div>
+      <div class="astat"><span class="astat-n" id="ange-members-protected">0</span><span class="astat-l">Membres protégés</span></div>
+      <div class="astat"><span class="astat-n">&lt; 3s</span><span class="astat-l">Temps de réponse</span></div>
+    </div>
+    <div class="ange-status-panel">
+      <div class="ange-status-card">
+        <span class="ange-status-label">GPS</span>
+        <span class="ange-status-value"><span class="ange-status-dot is-muted" id="ange-gps-dot"></span><span id="ange-gps-status">En attente</span></span>
+      </div>
+      <div class="ange-status-card">
+        <span class="ange-status-label">Statut</span>
+        <span class="ange-status-value"><span class="ange-status-dot is-ready" id="ange-flow-dot"></span><span id="ange-flow-status">Prêt</span></span>
+      </div>
+    </div>
+    <div class="ange-features">
+      <div class="af-row"><span class="af-icon">📍</span><div><div class="af-title">GPS Instantané</div><div class="af-text">Position exacte transmise en temps réel. Précision à quelques mètres. Fonctionne en mode silencieux.</div></div></div>
+      <div class="af-row"><span class="af-icon">🎙</span><div><div class="af-title">Audio 30 secondes</div><div class="af-text">Enregistrement ambiant automatique. Ton contact entend ce qui se passe autour de toi.</div></div></div>
+      <div class="af-row"><span class="af-icon">👻</span><div><div class="af-title">Mode Fantôme</div><div class="af-text">Navigation incognito complète. Ton profil devient invisible à tous les autres membres.</div></div></div>
+      <div class="af-row"><span class="af-icon">🔒</span><div><div class="af-title">Chiffrement total</div><div class="af-text">Alertes SOS chiffrées de bout en bout. Seul ton contact de confiance y a accès.</div></div></div>
+    </div>
+    <button class="sos-btn" id="sos-btn" onclick="activateSOS()">
+      <span class="sos-pulse"></span>
+      <span id="sos-btn-text">⚡ Activer Mode Ange Gardien</span>
+    </button>
+  </div>
+</section>
+
+<!-- RÉSEAU / GLOBE -->
+<section id="reseau-section">
+  <p class="section-tag" data-i18n="tag_reseau">// Le réseau s'étend</p>
+  <h2 class="section-title" data-i18n-html="title_reseau">Une communauté<br><em>qui grandit</em></h2>
+  <div class="globe-wrap">
+    <canvas id="globe-canvas"></canvas>
+  </div>
+  <div class="globe-legend">
+    <span class="globe-city">Québec</span>
+    <span class="globe-city">Montréal</span>
+    <span class="globe-city">Ottawa</span>
+    <span class="globe-city">Toronto</span>
+    <span class="globe-city">Vancouver</span>
+  </div>
+</section>
+
+<!-- SALON FLOTTANT -->
+<section id="salon-section">
+  <div class="salon-header">
+    <p class="section-tag" data-i18n="tag_salon">// Communauté · Salon Flottant · Temps Réel</p>
+    <h2 class="section-title" data-i18n-html="title_salon">Profils qui <em>flottent.</em><br>Connexions qui se créent.</h2>
+    <p class="section-body">Tu entres dans la pièce. Les autres membres dérivent autour de toi. Tu t'approches — tu entends leur musique. Tu t'éloignes — elle s'estompe. Comme dans un vrai bar. En temps réel.</p>
+  </div>
+
+  <div class="salon-picker" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
+    <div class="salon-card" data-salon="flottant" onclick="entrerSalon('flottant',this)" style="cursor:pointer;border:2px solid #D4AF37;background:rgba(212,175,55,0.12);padding:16px 12px;text-align:center;transition:all .2s">
+      <div style="font-size:1.8rem;margin-bottom:6px">🌊</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:#D4AF37;font-weight:700">SALON FLOTTANT</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-top:4px">Jaser en général</div>
+      <div style="margin-top:10px;font-family:Share Tech Mono,monospace;font-size:0.44rem;letter-spacing:2px;color:#D4AF37">ENTRER →</div>
+    </div>
+    <div class="salon-card" data-salon="voix" onclick="entrerSalon('voix',this)" style="cursor:pointer;border:2px solid rgba(212,175,55,0.3);background:rgba(255,255,255,0.02);padding:16px 12px;text-align:center;transition:all .2s">
+      <div style="font-size:1.8rem;margin-bottom:6px">🎙</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:rgba(212,175,55,0.85);font-weight:700">SALON DE LA VOIX</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-top:4px">Écouter avant de voir</div>
+      <div style="margin-top:10px;font-family:Share Tech Mono,monospace;font-size:0.44rem;letter-spacing:2px;color:rgba(212,175,55,0.6)">ENTRER →</div>
+    </div>
+    <div class="salon-card" data-salon="fantomes" onclick="entrerSalon('fantomes',this)" style="cursor:pointer;border:2px solid rgba(180,180,255,0.3);background:rgba(255,255,255,0.02);padding:16px 12px;text-align:center;transition:all .2s">
+      <div style="font-size:1.8rem;margin-bottom:6px">👻</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:rgba(180,180,255,0.85);font-weight:700">SALLE DES FANTÔMES</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-top:4px">Anonyme, incognito</div>
+      <div style="margin-top:10px;font-family:Share Tech Mono,monospace;font-size:0.44rem;letter-spacing:2px;color:rgba(180,180,255,0.6)">ENTRER →</div>
+    </div>
+  </div>
+
+  <div class="salon-immersif">
+    <div class="salon-backdrop bd-flottant" id="salon-backdrop">
+      <div class="mic-glow"></div>
+      <div class="soundwave"></div>
+      <div class="ghost-blob b1"></div>
+      <div class="ghost-blob b2"></div>
+      <div class="ghost-blob b3"></div>
+    </div>
+    <canvas id="salon-canvas"></canvas>
+    <div class="salon-vignette"></div>
+    <div class="salon-hud">
+      <div class="salon-badge">
+        <div class="online-dot"></div>
+        <span id="online-count">quelques</span>&nbsp;présences actives
+      </div>
+      <div class="salon-mode">MODE SALON · TEMPS RÉEL</div>
+    </div>
+    <div class="now-playing" id="now-playing" onclick="toggleMusique()" style="cursor:pointer" title="Jouer / pause">
+      <div class="disc" id="music-disc">🎵</div>
+      <div class="np-info">
+        <div class="np-track" id="np-track">Nuit de Québec</div>
+        <div class="np-artist" id="np-artist">VIBE Ambient · Salon Flottant</div>
+      </div>
+      <div class="eq-bars" id="eq-bars">
+        <div class="eq-bar" style="animation-delay:.0s"></div>
+        <div class="eq-bar" style="animation-delay:.12s"></div>
+        <div class="eq-bar" style="animation-delay:.24s"></div>
+        <div class="eq-bar" style="animation-delay:.36s"></div>
+        <div class="eq-bar" style="animation-delay:.48s"></div>
+      </div>
+    </div>
+    <div id="

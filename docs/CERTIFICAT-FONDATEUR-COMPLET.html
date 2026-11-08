@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificat Fondateur VIBE — VIBE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: #050508;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* CERTIFICAT SECTION */
+        .certificate {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #D4AF37;
+            padding: 60px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+            page-break-inside: avoid;
+        }
+
+        .certificate-title {
+            font-size: 2.5rem;
+            color: #D4AF37;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .certificate-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .certificate-content {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            margin: 50px 0;
+            line-height: 2;
+        }
+
+        .cert-line {
+            margin: 20px 0;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .cert-label {
+            color: #D4AF37;
+            font-weight: bold;
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+            margin-right: 20px;
+        }
+
+        .cert-value {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .certificate-footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #D4AF37;
+            font-size: 0.9rem;
+            color: rgba(212, 175, 55, 0.8);
+        }
+
+        /* SECTIONS DOCUMENTATION */
+        .doc-section {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 4px solid #D4AF37;
+            padding: 30px;
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        .doc-section h2 {
+            color: #D4AF37;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .doc-section h3 {
+            color: rgba(212, 175, 55, 0.9);
+            font-size: 1.2rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .subsection {
+            margin: 20px 0 20px 30px;
+        }
+
+        .info-box {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #D4AF37;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .table-data {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .table-data th {
+            background: rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #D4AF37;
+            font-weight: bold;
+        }
+
+        .table-data td {
+            padding: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: rgba(255,255,255,0.85);
+        }
+
+        .table-data tr:nth-child(even) {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .critical {
+            background: rgba(220, 20, 60, 0.2);
+            border-left: 4px solid #dc143c;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .critical strong {
+            color: #ff6b6b;
+        }
+
+        .success {
+            background: rgba(34, 139, 34, 0.2);
+            border-left: 4px solid #22b622;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .warning {
+            background: rgba(255, 165, 0, 0.2);
+            border-left: 4px solid #ffa500;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Share Tech Mono', monospace;
+            color: #90ee90;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            margin-left: 40px;
+            position: relative;
+        }
+
+        .step-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -40px;
+            top: 0;
+            background: #D4AF37;
+            color: #050508;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .toc {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid #D4AF37;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .toc h3 {
+            color: #D4AF37;
+            margin-bottom: 15px;
+            border: none;
+            padding: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc li {
+            padding: 5px 0;
+            margin: 0;
+        }
+
+        .toc a {
+            color: #90ee90;
+            text-decoration: none;
+            border-bottom: 1px dotted #D4AF37;
+        }
+
+        .toc a:hover {
+            color: #D4AF37;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #D4AF37;
+            color: rgba(212, 175, 55, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .print-only {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: #000;
+            }
+            .doc-section {
+                background: white;
+                border-left: 4px solid #333;
+            }
+            .print-only {
+                display: block;
+            }
+            .certificate {
+                background: white;
+                border: 2px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ============================================
+     CERTIFICAT OFFICIEL FONDATEUR
+     ============================================ -->
+<div class="certificate">
+    <div class="certificate-title">🌊 VIBE</div>
+    <div class="certificate-subtitle">Certificat Officiel Fondateur</div>
+
+    <div class="certificate-content">
+        <div class="cert-line">
+            <span class="cert-label">Fondateur:</span>
+            <span class="cert-value">VIBE</span>
+        </div>
+
+        <div class="cert-line">
+            <span class="cert-label">Plateforme:</span>
+            <span class="cert-value">VIBE — Réseau LGBTQ+ Nouvelle Génération</span>
+        </div>
+
+        <div class="cert-line">
+            <span class="cert-label">Fondée:</span>
+            <span class="cert-value">Québec, Canada — 2026</span>
+        </div>
+
+        <div class="cert-line">
+            <span class="cert-label">Domaine:</span>
+            <span class="cert-value">vibegay.ca</span>
+        </div>
+
+        <div class="cert-line">
+            <span class="cert-label">Mission:</span>
+            <span class="cert-value">Authentic Connection for LGBTQ+ Community</span>
+        </div>
+
+        <div class="cert-line">
+            <span class="cert-label">Valeurs:</span>
+            <span class="cert-value">Humilité Totale • Respect • Authenticité</span>
+        </div>
+    </div>
+
+    <div class="certificate-footer">
+        <p>Ce certificat authentifie VIBE comme fondateur et propriétaire de VIBE.</p>
+        <p style="margin-top: 20px;">Établi le 27 août 2026</p>
+        <p style="margin-top: 30px; font-style: italic; color: rgba(212, 175, 55, 0.6);">Avec Humilité et Respect 🌊</p>
+    </div>
+</div>
+
+<!-- ============================================
+     TABLE DES MATIERES
+     ============================================ -->
+<div class="toc">
+    <h3>📑 Table Complète des Matières</h3>
+    <ul>
+        <li><a href="#section-1">1. Informations Essentielles</a></li>
+        <li><a href="#section-2">2. Contacts & Fournisseurs Critiques</a></li>
+        <li><a href="#section-3">3. Stack Technique Complet</a></li>
+        <li><a href="#section-4">4. Accès aux Tableaux de Bord</a></li>
+        <li><a href="#section-5">5. Gestion des Billets (Monnaie)</a></li>
+        <li><a href="#section-6">6. Gestion des Pubs (Publicités)</a></li>
+        <li><a href="#section-7">7. Gestion de la Clientèle</a></li>
+        <li><a href="#section-8">8. Problèmes Plateforme - Diagnostic</a></li>
+        <li><a href="#section-9">9. Procédures d'Urgence</a></li>
+        <li><a href="#section-10">10. Architecture & Code</a></li>
+        <li><a href="#section-11">11. Requêtes SQL Utiles</a></li>
+        <li><a href="#section-12">12. Checklist Problèmes Courants</a></li>
+    </ul>
+</div>
+
+<!-- ============================================
+     SECTION 1: INFORMATIONS ESSENTIELLES
+     ============================================ -->
+<div class="doc-section" id="section-1">
+    <h2>1️⃣ Informations Essentielles</h2>
+
+    <h3>Plateforme VIBE</h3>
+    <div class="info-box">
+        <strong>Nom Officiel:</strong> VIBE — Réseau LGBTQ+ Nouvelle Génération<br>
+        <strong>Fondateur & CEO:</strong> VIBE<br>
+        <strong>Créée:</strong> Août 2026 à Québec, Canada<br>
+        <strong>Version Actuelle:</strong> 1.0.0 (Production)<br>
+        <strong>Statut:</strong> ✅ Production Ready
+    </div>
+
+    <h3>Domaines Principal</h3>
+    <div class="info-box">
+        <strong>domaine:</strong> vibegay.ca<br>
+        <strong>Registrar:</strong> Namecheap<br>
+        <strong>Type:</strong> .ca domain (Canadian)<br>
+        <strong>Statut DNS:</strong> ✅ Actif<br>
+        <strong>Auto-Renew:</strong> ✅ Activé
+    </div>
+
+    <h3>Mission & Valeurs</h3>
+    <div class="subsection">
+        <strong>Mission:</strong> Authentic Connection for the Global LGBTQ+ Community
+        <br><br>
+        <strong>Valeurs Fondamentales:</strong>
+        <ul>
+            <li><strong>Humilité Totale</strong> — Respect for every member of our community</li>
+            <li><strong>Respect</strong> — Zero tolerance for discrimination or abuse</li>
+            <li><strong>Authenticité</strong> — Real connections, real conversations</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 2: CONTACTS & FOURNISSEURS
+     ============================================ -->
+<div class="doc-section" id="section-2">
+    <h2>2️⃣ Contacts & Fournisseurs Critiques</h2>
+
+    <h3>Équipe Dirigeante</h3>
+    <table class="table-data">
+        <thead>
+            <tr>
+                <th>Rôle</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Responsabilités</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>CEO & Fondateur</strong></td>
+                <td>VIBE</td>
+                <td>[À compléter]</td>
+                <td>Décisions finales, stratégie, approbations</td>
+            </tr>
+            <tr>
+                <td><strong>Directeur Opérations</strong></td>
+                <td>Support VIBE</td>
+                <td>support@vibegay.ca</td>
+                <td>Opérations jour-à-jour, support, escalade</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Fournisseurs Critiques & Dashboards</h3>
+    <table class="table-data">
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Fournisseur</th>
+                <th>URL/Dashboard</th>
+                <th>SLA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Base de Données</strong></td>
+                <td>Supabase</td>
+                <td>supabase.com/dashboard</td>
+                <td>99.9% uptime</td>
+            </tr>
+            <tr>
+                <td><strong>Authentification</strong></td>
+                <td>Supabase Auth</td>
+                <td>supabase.com/dashboard</td>
+                <td>99.9% uptime</td>
+            </tr>
+            <tr>
+                <td><strong>Hébergement Frontend</strong></td>
+                <td>GitHub Pages</td>
+                <td>github.com/vibe2027/VIBE</td>
+                <td>99.95% uptime</td>
+            </tr>
+            <tr>
+                <td><strong>Domaine & DNS</strong></td>
+                <td>Namecheap</td>
+                <td>namecheap.com/domains</td>
+                <td>Auto-renewal</td>
+            </tr>
+            <tr>
+                <td><strong>Paiements (Fondateur)</strong></td>
+                <td>Stripe</td>
+                <td>dashboard.stripe.com</td>
+                <td>99.99% uptime</td>
+            </tr>
+            <tr>
+                <td><strong>Paiements Alternatif</strong></td>
+                <td>PayPal</td>
+                <td>paypal.com/business</td>
+                <td>Support standard</td>
+            </tr>
+            <tr>
+                <td><strong>Virement Électronique</strong></td>
+                <td>Interac</td>
+                <td>interac.ca</td>
+                <td>Canada-wide</td>
+            </tr>
+            <tr>
+                <td><strong>SMS Alertes (Mode Ange)</strong></td>
+                <td>Twilio</td>
+                <td>console.twilio.com</td>
+                <td>99.9% uptime</td>
+            </tr>
+            <tr>
+                <td><strong>Analytics & Monitoring</strong></td>
+                <td>Vercel Insights</td>
+                <td>vercel.com/analytics</td>
+                <td>Real-time</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Accès Namecheap (Domaine)</h3>
+    <div class="critical">
+        <strong>⚠️ CRITIQUES — Garder confidentiels</strong>
+        <div class="subsection" style="margin-top: 10px;">
+            <strong>Email:</strong> <code>support@vibegay.ca</code> (en copie) ou voir VIBE<br>
+            <strong>Mot de passe:</strong> [Demander à VIBE]<br>
+            <strong>Accès:</strong> DNS settings, redirects, email forwarding<br>
+            <strong>⚠️ IMPORTANT:</strong> Ne modifier DNS QUE avec accord VIBE
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 3: STACK TECHNIQUE
+     ============================================ -->
+<div class="doc-section" id="section-3">
+    <h2>3️⃣ Stack Technique Complet</h2>
+
+    <h3>Architecture Générale</h3>
+    <div class="subsection">
+        <strong>Frontend:</strong> HTML5 + CSS3 + JavaScript Vanilla (pas de framework)<br>
+        <strong>Backend:</strong> Supabase (PostgreSQL + Realtime)<br>
+        <strong>Authentification:</strong> Supabase Auth (Email/Password)<br>
+        <strong>Base de Données:</strong> PostgreSQL avec Row Level Security (RLS)<br>
+        <strong>Realtime:</strong> Supabase Realtime pour chat en direct<br>
+        <strong>Paiements:</strong> Stripe, PayPal, Interac (manual reconciliation)<br>
+        <strong>SMS:</strong> Twilio pour Mode Ange Gardien<br>
+        <strong>Hébergement:</strong> GitHub Pages (statique)<br>
+        <strong>Domaine:</strong> vibegay.ca (DNS: Namecheap)
+    </div>
+
+    <h3>URLs Principales</h3>
+    <table class="table-data">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Fonction</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>vibegay.ca/</code></td>
+                <td>Accueil (bande-annonce)</td>
+                <td>Public</td>
+            </tr>
+            <tr>
+                <td><code>vibegay.ca/index.html</code></td>
+                <td>Application principale</td>
+                <td>Membres</td>
+            </tr>
+            <tr>
+                <td><code>vibegay.ca/conditions.html</code></td>
+                <td>Conditions d'utilisation</td>
+                <td>Public</td>
+            </tr>
+            <tr>
+                <td><code>vibegay.ca/confidentialite.html</code></td>
+                <td>Politique de confidentialité (Loi 25)</td>
+                <td>Public</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Technologie Clés</h3>
+    <div class="subsection">
+        <strong>Supabase:</strong> Backend as a Service (PostgreSQL + Auth + Realtime)<br>
+        <strong>PostgreSQL:</strong> Puissant, open-source, RLS natif<br>
+        <strong>Row Level Security:</strong> Sécurité au niveau rangée (protège les données)<br>
+        <strong>Stripe:</strong> Paiements (liens de paiement directs)<br>
+        <strong>PWA Support:</strong> App installable sur téléphone<br>
+        <strong>Responsive Design:</strong> Fonctionne desktop, tablet, mobile
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 4: ACCÈS AUX TABLEAUX DE BORD
+     ============================================ -->
+<div class="doc-section" id="section-4">
+    <h2>4️⃣ Accès aux Tableaux de Bord</h2>
+
+    <h3>🗄️ Supabase Dashboard (Base de Données)</h3>
+    <div class="info-box">
+        <strong>URL:</strong> supabase.com/dashboard<br>
+        <strong>Accès:</strong> Email VIBE<br>
+        <strong>Tables Principales:</strong> users, billets, billet_transactions, tribunal_cases, salons_messages, pubs<br>
+        <strong>Clé:</strong> Voir .env variable <code>SUPABASE_KEY</code>
+    </div>
+
+    <h3>💳 Stripe Dashboard (Paiements)</h3>
+    <div class="info-box">
+        <strong>URL:</strong> dashboard.stripe.com<br>
+        <strong>Accès:</strong> Email compte Stripe (Fondateur)<br>
+        <strong>Vérifie:</strong> Paiements reçus, liens de paiement, soldes<br>
+        <strong>Sandbox Mode:</strong> Pour test (ne pas utiliser en production)
+    </div>
+
+    <h3>🔐 Namecheap Domaine</h3>
+    <div class="info-box">
+        <strong>URL:</strong> namecheap.com/domains<br>
+        <strong>Domaine:</strong> vibegay.ca<br>
+        <strong>Accès:</strong> Voir VIBE pour mot de passe<br>
+        <strong>Vérifie:</strong> Statut domaine, DNS, auto-renew
+    </div>
+
+    <h3>📞 Twilio (SMS Mode Ange)</h3>
+    <div class="info-box">
+        <strong>URL:</strong> console.twilio.com<br>
+        <strong>Fonction:</strong> Alertes SOS en SMS<br>
+        <strong>Accès:</strong> Voir VIBE<br>
+        <strong>Vérifie:</strong> Crédits, logs SMS
+    </div>
+
+    <h3>📊 Vercel Analytics</h3>
+    <div class="info-box">
+        <strong>URL:</strong> vercel.com/analytics<br>
+        <strong>Vérifie:</strong> Performance, uptime, erreurs<br>
+        <strong>Real-time:</strong> Monitoring en direct
+    </div>
+
+    <h3>🐙 GitHub Repository</h3>
+    <div class="info-box">
+        <strong>URL:</strong> github.com/vibe2027/VIBE<br>
+        <strong>Branche Main:</strong> Production code<br>
+        <strong>Accès:</strong> Email VIBE<br>
+        <strong>Commits:</strong> Historique de tous les changements
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 5: GESTION DES BILLETS
+     ============================================ -->
+<div class="doc-section" id="section-5">
+    <h2>5️⃣ Gestion des Billets (Monnaie Interne)</h2>
+
+    <h3>Qu'est-ce qu'un Billet?</h3>
+    <div class="subsection">
+        Le <strong>billet</strong> est la monnaie interne de VIBE:
+        <ul>
+            <li>Utilisateurs les gagnent en participant (messages, tribunal, aide communautaire)</li>
+            <li>Utilisateurs les dépensent pour publier des pubs/annonces</li>
+            <li>Système de récompense pour engagement</li>
+            <li>Pas d'argent réel — monnaie interne seulement</li>
+        </ul>
+    </div>
+
+    <h3>Procédure: Créer des Billets</h3>
+    <div class="subsection">
+        <div class="success">
+            <strong>✅ TU PEUX le faire SANS accord:</strong> Billets < 1000
+        </div>
+
+        <ol class="step-list">
+            <li>Ouvrir Supabase Dashboard (supabase.com/dashboard)</li>
+            <li>Aller à table <code>billets</code> ou <code>user_billets</code></li>
+            <li>Ajouter entrée:
+                <div class="info-box" style="margin-top: 10px;">
+                    user_id: [ID utilisateur]<br>
+                    amount: [nombre de billets]<br>
+                    reason: "message_sent" / "tribunal_vote" / "community_help"<br>
+                    created_at: NOW()
+                </div>
+            </li>
+            <li>Enregistrer et confirmer</li>
+        </ol>
+    </div>
+
+    <h3>Procédure: Correction/Bonus > 1000 billets</h3>
+    <div class="subsection">
+        <div class="critical">
+            <strong>⚠️ REQUIERT ACCORD PASCAL si montant > 1000</strong>
+        </div>
+
+        <ol class="step-list">
+            <li>Documenter: pourquoi cette correction?</li>
+            <li>Envoyer à VIBE:
+                <div class="info-box" style="margin-top: 10px;">
+                    Utilisateur: [nom/ID]<br>
+                    Montant: [billets]<br>
+                    Raison: [explication détaillée]<br>
+                    Justification: [preuve si applicable]
+                </div>
+            </li>
+            <li>Attendre approbation explicite</li>
+            <li>Appliquer après accord</li>
+        </ol>
+    </div>
+
+    <h3>Audit des Billets</h3>
+    <div class="subsection">
+        Table: <code>billet_transactions</code> contient tous les logs
+        <div class="info-box" style="margin-top: 10px;">
+            Chaque transaction registrée:<br>
+            - user_id<br>
+            - amount<br>
+            - type (earned / spent / adjusted)<br>
+            - reason<br>
+            - created_at<br>
+            - modified_by (admin qui a changé)
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 6: GESTION DES PUBS
+     ============================================ -->
+<div class="doc-section" id="section-6">
+    <h2>6️⃣ Gestion des Pubs (Publicités/Annonces)</h2>
+
+    <h3>Qu'est-ce qu'une Pub?</h3>
+    <div class="subsection">
+        Une <strong>pub</strong> (publicité) est un contenu promotionnel posté par utilisateurs:
+        <ul>
+            <li>Annonces d'événements, services, produits</li>
+            <li>Ciblée par salon (Flottant, Voix, Fantômes, etc.)</li>
+            <li>Coûte des billets à l'utilisateur</li>
+            <li>Requiert approbation admin avant publication</li>
+        </ul>
+    </div>
+
+    <h3>Workflow: Approbation/Rejet Pub</h3>
+    <div class="subsection">
+        <ol class="step-list">
+            <li>Utilisateur crée pub et paie billets</li>
+            <li>Pub va à table <code>pubs</code> avec status = "pending"</li>
+            <li>Tu reçois notification (ou vérifie dashboard)</li>
+            <li>Évaluer contenu:
+                <div class="info-box" style="margin-top: 10px;">
+                    ✅ APPROUVER si:<br>
+                    • Respectueuse et appropriée<br>
+                    • Pas de spam/harassment<br>
+                    • Pas de contenu illégal<br>
+                    • Pas de liens dangereux
+                </div>
+            </li>
+            <li>Approuver ou rejeter dans Supabase</li>
+            <li>Notifier utilisateur (auto-email)</li>
+        </ol>
+    </div>
+
+    <h3>Politique de Contenu Pubs</h3>
+    <div class="subsection">
+        <div class="critical">
+            <strong>❌ REJETER PUB SI:</strong>
+            <ul>
+                <li>Discrimination (contre LGBTQ+, race, religion, etc.)</li>
+                <li>Contenu sexuel explicite</li>
+                <li>Spam ou contenu dupliqué</li>
+                <li>Liens externes suspects ou malveillants</li>
+                <li>Scams ou arnaques</li>
+                <li>Harc, menaces, violence</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 7: GESTION DE LA CLIENTÈLE
+     ============================================ -->
+<div class="doc-section" id="section-7">
+    <h2>7️⃣ Gestion de la Clientèle</h2>
+
+    <h3>Support Utilisateurs</h3>
+    <div class="subsection">
+        <strong>Email support:</strong> support@vibegay.ca (voir Support VIBE)<br>
+        <strong>Tickets:</strong> Supabase → table <code>support_tickets</code><br>
+        <strong>Réponse SLA:</strong> 24h maximum<br>
+        <strong>Escalade:</strong> Si complexe → vers VIBE
+    </div>
+
+    <h3>Templates de Réponse Courants</h3>
+    <div class="subsection">
+        <strong>Problème: "J'ai oublié mon mot de passe"</strong>
+        <div class="info-box">
+            Merci de nous contacter! Veuillez cliquer sur "Mot de passe oublié?" sur la page login. Un email de réinitialisation vous sera envoyé. Si vous ne le recevez pas dans 10 min, vérifiez le dossier Spam. Si ça persiste, répondez à ce message.
+        </div>
+
+        <strong>Problème: "Ma pub a été rejetée"</strong>
+        <div class="info-box">
+            Merci de nous contacter! Votre pub a été rejettée car elle ne respecte pas nos politiques de contenu. Raison: [détails]. Vous pouvez réessayer avec un contenu révisé. Pour questions, contactez-nous.
+        </div>
+
+        <strong>Problème: "Chat gelé/ne se charge pas"</strong>
+        <div class="info-box">
+            Merci! Essayez: (1) Rafraîchir la page (F5), (2) Vider cache navigateur, (3) Essayer autre navigateur. Si persiste, nous avons peut-être un problème technique. Attendez 15 min et réessayez. Désolé!
+        </div>
+    </div>
+
+    <h3>Escalade Utilisateur</h3>
+    <div class="subsection">
+        <div class="critical">
+            <strong>⚠️ ESCALADER à VIBE SI:</strong>
+            <ul>
+                <li>Utilisateur demande suppression données personnelles (LPRPDE)</li>
+                <li>Réclamation légale ou menace juridique</li>
+                <li>Harcèlement grave / cyberharcèlement</li>
+                <li>Accusation de discrimination</li>
+                <li>Demande de refund/remboursement</li>
+                <li>Accès à données/sécurité privée</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 8: PROBLÈMES PLATEFORME
+     ============================================ -->
+<div class="doc-section" id="section-8">
+    <h2>8️⃣ Problèmes Plateforme — Diagnostic & Résolution</h2>
+
+    <h3>Problème: Chat Lent ou Gelé</h3>
+    <div class="subsection">
+        <ol class="step-list">
+            <li><strong>Vérifier Supabase Status:</strong> supabase.com/status</li>
+            <li><strong>Vérifier Realtime:</strong> Supabase → Realtime tab active?</li>
+            <li><strong>Vérifier Vercel:</strong> vercel.com/analytics</li>
+            <li><strong>Si problème détecté:</strong> Notifier fournisseur + VIBE</li>
+            <li><strong>Communiquer utilisateurs:</strong> "Nous travaillons sur une issue technique"</li>
+        </ol>
+    </div>
+
+    <h3>Problème: Erreur Base de Données (500 error)</h3>
+    <div class="subsection">
+        <ol class="step-list">
+            <li><strong>Vérifier logs Supabase:</strong> Dashboard → Logs</li>
+            <li><strong>Chercher pattern:</strong> Quelle table? Quel utilisateur?</li>
+            <li><strong>Vérifier SQL:</strong> Y a-t-il erreur dans une query?</li>
+            <li><strong>Si data corruption:</strong> Escalader IMMÉDIATEMENT à VIBE</li>
+        </ol>
+    </div>
+
+    <h3>Problème: Billets Disparaissent / Perte de Données</h3>
+    <div class="subsection">
+        <div class="critical">
+            <strong>🚨 URGENCE MAXIMALE</strong>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>ARRÊTER tout maintenant</strong> — ne rien modifier</li>
+            <li><strong>Backups?</strong> Supabase auto-backup chaque jour</li>
+            <li><strong>ESCALADER VIBE IMMÉDIATEMENT</strong> avec:
+                <div class="info-box" style="margin-top: 10px;">
+                    • Quels utilisateurs affectés?<br>
+                    • Montant total de billets perdus?<br>
+                    • Quand first discovered?<br>
+                    • Logs/evidence
+                </div>
+            </li>
+            <li><strong>Le Fondateur décidera:</strong> Restore from backup? Compensation?</li>
+        </ol>
+    </div>
+
+    <h3>Problème: Domaine Non Accessible (vibegay.ca down)</h3>
+    <div class="subsection">
+        <ol class="step-list">
+            <li><strong>Vérifier DNS:</strong> Namecheap → domaine settings</li>
+            <li><strong>Vérifier GitHub Pages:</strong> github.com/vibe2027/VIBE status</li>
+            <li><strong>Ping domaine:</strong> <code>ping vibegay.ca</code></li>
+            <li><strong>Si DNS issue:</strong> Vérifier avec VIBE (Namecheap access)</li>
+            <li><strong>Si GitHub Pages down:</strong> Contact GitHub support</li>
+        </ol>
+    </div>
+
+    <h3>Problème: Hacking / Accès Non Autorisé</h3>
+    <div class="subsection">
+        <div class="critical">
+            <strong>🚨 URGENCE CRITIQUE</strong>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>ESCALADER IMMÉDIATEMENT VIBE</strong></li>
+            <li><strong>Actions:</strong>
+                <ul>
+                    <li>Changer tous les mots de passe</li>
+                    <li>Vérifier logs Supabase pour activité suspecte</li>
+                    <li>Revérifier credentials (API keys, tokens)</li>
+                    <li>Notifier users: "Security incident, working on it"</li>
+                </ul>
+            </li>
+            <li><strong>Mesures:</strong> 2FA, IP whitelisting, audit complet</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 9: PROCÉDURES D'URGENCE
+     ============================================ -->
+<div class="doc-section" id="section-9">
+    <h2>9️⃣ Procédures d'Urgence</h2>
+
+    <h3>Escalade à VIBE — Niveau Critique</h3>
+    <div class="subsection">
+        <strong>Quand escalader immédiatement:</strong>
+        <ul>
+            <li>🚨 Hacking/sécurité compromise</li>
+            <li>🚨 Perte massive de données</li>
+            <li>🚨 Domaine/site complètement down (>1h)</li>
+            <li>🚨 Accusation légale</li>
+            <li>🚨 Issue financière (paiements perdu, fraude)</li>
+        </ul>
+
+        <div class="critical" style="margin-top: 15px;">
+            <strong>Template Escalade CRITIQUE:</strong>
+            <div class="info-box" style="margin-top: 10px;">
+                Sujet: 🚨 URGENT - [Problem Type]<br><br>
+                VIBE,<br><br>
+                Issue critique détectée:<br>
+                • Description: [quoi exactement?]<br>
+                • Scope: [combien utilisateurs affectés?]<br>
+                • Timeline: [quand commencé?]<br>
+                • Status: [actuellement en cours ou résolu?]<br>
+                • Actions prises: [qu'as tu déjà fait?]<br><br>
+                Besoin approbation pour: [décrire]<br><br>
+                Marc
+            </div>
+        </div>
+    </div>
+
+    <h3>Escalade à VIBE — Niveau Élevé</h3>
+    <div class="subsection">
+        <div class="warning">
+            <strong>Quand escalader dans l'heure:</strong>
+            <ul>
+                <li>Corrections > 1000 billets</li>
+                <li>Rejet pub complex (légalité questionnable)</li>
+                <li>Utilisateur escalade avec menace</li>
+                <li>Problème non résolu après 2h</li>
+                <li>Policy question (nouveau cas)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 10: ARCHITECTURE & CODE
+     ============================================ -->
+<div class="doc-section" id="section-10">
+    <h2>🔟 Architecture & Code</h2>
+
+    <h3>Repository Structure</h3>
+    <div class="subsection">
+        <div class="info-box">
+            <strong>GitHub:</strong> github.com/vibe2027/VIBE<br>
+            <strong>Branch Main:</strong> Production code<br>
+            <strong>Branch Dev:</strong> Development (si applicable)<br>
+            <strong>Clone:</strong> <code>git clone https://github.com/vibe2027/VIBE</code>
+        </div>
+    </div>
+
+    <h3>Fichiers Clés</h3>
+    <table class="table-data">
+        <thead>
+            <tr>
+                <th>Fichier</th>
+                <th>Fonction</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>index.html</code></td>
+                <td>Application principale</td>
+                <td>Frontend</td>
+            </tr>
+            <tr>
+                <td><code>conditions.html</code></td>
+                <td>Conditions d'utilisation</td>
+                <td>Legal</td>
+            </tr>
+            <tr>
+                <td><code>confidentialite.html</code></td>
+                <td>Politique de confidentialité (Loi 25)</td>
+                <td>Legal</td>
+            </tr>
+            <tr>
+                <td><code>manifest.json</code></td>
+                <td>PWA manifest</td>
+                <td>Config</td>
+            </tr>
+            <tr>
+                <td><code>sw.js</code></td>
+                <td>Service worker (offline mode)</td>
+                <td>Frontend</td>
+            </tr>
+            <tr>
+                <td><code>README.md</code></td>
+                <td>Documentation principale</td>
+                <td>Docs</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Base de Données — Tables Clés</h3>
+    <table class="table-data">
+        <thead>
+            <tr>
+                <th>Table</th>
+                <th>Fonction</th>
+                <th>Champs Clés</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>auth.users</code></td>
+                <td>Comptes utilisateur (Supabase)</td>
+                <td>id, email, created_at</td>
+            </tr>
+            <tr>
+                <td><code>public.users</code></td>
+                <td>Profiles utilisateur</td>
+                <td>id, email, role, created_at</td>
+            </tr>
+            <tr>
+                <td><code>billets</code></td>
+                <td>Transactions billets</td>
+                <td>id, user_id, amount, reason</td>
+            </tr>
+            <tr>
+                <td><code>salons_messages</code></td>
+                <td>Messages chat</td>
+                <td>id, user_id, salon_name, content</td>
+            </tr>
+            <tr>
+                <td><code>pubs</code></td>
+                <td>Publicités/annonces</td>
+                <td>id, user_id, salon, status, content</td>
+            </tr>
+            <tr>
+                <td><code>tribunal_cases</code></td>
+                <td>Modération</td>
+                <td>id, complainant_id, accused_id, status</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ============================================
+     SECTION 11: REQUÊTES SQL
+     ============================================ -->
+<div class="doc-section" id="section-11">
+    <h2>1️⃣1️⃣ Requêtes SQL Utiles (Diagnostic)</h2>
+
+    <h3>Vérifier Nombre Utilisateurs Actifs</h3>
+    <div class="info-box">
+        <code>SELECT COUNT(*) as total_users FROM public.users WHERE created_at > NOW() - INTERVAL '30 days';</code>
+    </div>
+
+    <h3>Vérifier Distribution de Billets</h3>
+    <div class="info-box">
+        <code>SELECT user_id, SUM(amount) as total_billets FROM billets GROUP BY user_id ORDER BY total_billets DESC LIMIT 10;</code>
+    </div>
+
+    <h3>Vérifier Pubs Pending (en attente d'approbation)</h3>
+    <div class="info-box">
+        <code>SELECT id, user_id, salon, content, created_at FROM pubs WHERE status = 'pending' ORDER BY created_at ASC;</code>
+    </div>
+
+    <h3>Vérifier Messages Dernière Heure</h3>
+    <div class="info-box">
+        <code>SELECT COUNT(*) as messages_last_hour FROM salons_messages WHERE created_at > NOW() - INTERVAL '1 hour';</code>
+    </div>
+
+    <h3>Vérifier Cas Tribunal Non Résolus</h3>
+    <div class="info-box">
+        <code>SELECT id, complainant_id, accused_id, case_type, created_at FROM tribunal_cases WHERE status = 'open' ORDER BY created_at ASC;</code>
+    </div>
+
+    <h3>Vérifier Transactions Billets Suspectes</h3>
+    <div class="info-box">
+        <code>SELECT user_id, amount, reason, created_at FROM billets WHERE amount > 5000 ORDER BY created_at DESC LIMIT 20;</code>
+    </div>
+</div>
+
+<!-- ============================================
+     SECTION 12: CHECKLIST PROBLÈMES COURANTS
+     ============================================ -->
+<div class="doc-section" id="section-12">
+    <h2>1️⃣2️⃣ Checklist Problèmes Courants</h2>
+
+    <h3>🔓 Problème: Utilisateur Ne Peut Pas Se Connecter</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>Utilisateur a vérifié email? (Check email_verified field)</li>
+            <li>Compte existe dans auth.users? (Supabase → Users)</li>
+            <li>Password correct? (Reset password link)</li>
+            <li>IP bloquée? (Check logs)</li>
+            <li>Rate limiting? (Trop de tentatives)</li>
+            <li>Browser cookies activés?</li>
+            <li><strong>Solution:</strong> Envoyer password reset link</li>
+        </ul>
+    </div>
+
+    <h3>💬 Problème: Chat Gelé / Messages Ne Chargent Pas</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>Realtime subscription active? (Supabase logs)</li>
+            <li>Internet connection OK?</li>
+            <li>Browser tab switched away?</li>
+            <li>Messages dans table? (SELECT * FROM salons_messages)</li>
+            <li>Supabase down? (Check status page)</li>
+            <li><strong>Solution:</strong> Refresh page, clear cache, try different browser</li>
+        </ul>
+    </div>
+
+    <h3>💸 Problème: Billet Disparu / Compte Non Crédité</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>Transaction existe dans billets table?</li>
+            <li>Vérifier billet_transactions pour log</li>
+            <li>Utilisateur regardait bon compte?</li>
+            <li>Cache navigateur non à jour?</li>
+            <li><strong>Si bug:</strong> Manual adjustment + document + escalade VIBE</li>
+        </ul>
+    </div>
+
+    <h3>📢 Problème: Pub Non Apparue Après Approbation</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>Status = "approved" dans Supabase?</li>
+            <li>Pas expiré? (Check expiry date)</li>
+            <li>Salon correct? (Flottant, Voix, etc.)</li>
+            <li>Cache utilisateur pas à jour? (Refresh)</li>
+            <li><strong>Solution:</strong> Refresh utilisateur, re-query salon</li>
+        </ul>
+    </div>
+
+    <h3>🚫 Problème: Spam / Harcèlement dans Chat</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>Identifier utilisateur spammeur</li>
+            <li>Créer tribunal_case si grave</li>
+            <li>Soft-delete messages offensants (soft_deleted = true)</li>
+            <li>Warning utilisateur</li>
+            <li><strong>Si persiste:</strong> Suspend account (is_suspended = true)</li>
+            <li><strong>Si grave:</strong> Escalade VIBE pour ban permanent</li>
+        </ul>
+    </div>
+
+    <h3>🚨 Problème: Site Complètement Down (404)</h3>
+    <div class="subsection">
+        <ul class="step-list">
+            <li>GitHub Pages status? (status.github.com)</li>
+            <li>DNS pointing correct? (Namecheap check)</li>
+            <li>SSL certificate valide? (Check https)</li>
+            <li>Repository accessible? (github.com/vibe2027/VIBE)</li>
+            <li><strong>Solution:</strong> Vérifier DNS settings, redeploy depuis GitHub</li>
+            <li><strong>Si persiste >30min:</strong> Escalade VIBE + GitHub support</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<div class="footer">
+    <hr style="border: 1px solid #D4AF37; margin: 30px 0;">
+    <p><strong>Certificat Officiel de Fondateur & Manuel Technique Complet</strong></p>
+    <p style="margin-top: 15px;">
+        <strong>VIBE</strong><br>
+        CEO & Fondateur, VIBE<br>
+        Québec, Canada — 2026
+    </p>
+    <p style="margin-top: 20px; color: rgba(212, 175, 55, 0.6);">
+        Ce document certifie l'authentification complète de la plateforme VIBE.<br>
+        Garder confidentiel. Partager uniquement avec personnel autorisé.
+    </p>
+    <p style="margin-top: 30px; font-size: 1rem; font-style: italic; color: rgba(212, 175, 55, 0.5);">
+        Avec Humilité et Respect 🌊<br>
+        Authentic Connection for LGBTQ+ Community
+    </p>
+</div>
+
+</div>
+
+</body>
+</html>

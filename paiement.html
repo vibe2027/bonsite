@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index,follow">
+<title>Paiement — VIBE · vibegay.ca</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050508;color:rgba(255,255,255,0.82);font-family:'Share Tech Mono',monospace;line-height:1.9;font-size:0.85rem;letter-spacing:0.5px}
+.wrap{max-width:620px;margin:0 auto;padding:60px 26px 90px}
+a{color:#D4AF37;text-decoration:none}a:hover{text-decoration:underline}
+h1{font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;margin-bottom:10px;line-height:1.2}
+.meta{font-size:0.6rem;color:rgba(212,175,55,0.8);letter-spacing:3px;margin-bottom:36px;text-transform:uppercase}
+.back{display:inline-block;margin-bottom:30px;font-size:0.62rem;letter-spacing:2px}
+p{margin-bottom:16px;color:rgba(255,255,255,0.75)}
+h2{font-size:0.72rem;color:#D4AF37;letter-spacing:3px;margin:38px 0 16px;text-transform:uppercase}
+
+.avis{background:rgba(212,175,55,0.08);border-left:3px solid #D4AF37;padding:16px 18px;margin:0 0 30px;font-size:0.75rem;color:rgba(255,255,255,0.8)}
+
+.cible{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.35);border-radius:5px;padding:26px 22px;text-align:center;margin:26px 0}
+.cible-label{font-size:0.6rem;letter-spacing:3px;color:rgba(255,255,255,0.55);text-transform:uppercase;margin-bottom:10px}
+.cible-courriel{font-size:1.05rem;color:#fff;user-select:all;word-break:break-all;display:block;margin-bottom:6px}
+.cible-montant{font-size:0.72rem;color:#D4AF37;letter-spacing:2px;margin-top:12px}
+
+ol{padding-left:0;list-style:none;counter-reset:etape}
+ol li{counter-increment:etape;position:relative;padding-left:42px;margin-bottom:18px;color:rgba(255,255,255,0.78)}
+ol li::before{content:counter(etape);position:absolute;left:0;top:2px;width:26px;height:26px;border:1px solid rgba(212,175,55,0.5);border-radius:50%;color:#D4AF37;font-size:0.68rem;display:flex;align-items:center;justify-content:center}
+ol li b{color:#fff;font-weight:400}
+
+table{width:100%;border-collapse:collapse;margin:8px 0 20px;font-size:0.72rem}
+th{text-align:left;color:#D4AF37;font-weight:400;letter-spacing:2px;text-transform:uppercase;font-size:0.6rem;padding:8px 4px;border-bottom:1px solid rgba(212,175,55,0.3)}
+td{padding:9px 4px;border-bottom:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.75)}
+td.prix{text-align:right;color:#fff;white-space:nowrap}
+tr.actif td{background:rgba(212,175,55,0.1);color:#fff}
+tr.actif td.prix{color:#D4AF37}
+
+.note{font-size:0.68rem;color:rgba(255,255,255,0.5);line-height:1.9;margin-top:8px}
+footer{margin-top:46px;padding-top:22px;border-top:1px solid rgba(212,175,55,0.25);font-size:0.65rem;color:rgba(255,255,255,0.5)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/">← Retour à vibegay.ca</a>
+<h1>Paiement</h1>
+<div class="meta">VIBE · VIBEGAY.CA · NEQ 2282352097</div>
+
+<div class="avis">
+  Le paiement par carte est temporairement indisponible. Les adhésions se règlent
+  actuellement par <b>virement Interac</b> — un moyen gratuit, instantané et offert
+  par toutes les banques canadiennes.
+</div>
+
+<div class="cible">
+  <div class="cible-label">Envoyer le virement à</div>
+  <span class="cible-courriel" id="courriel">support@vibegay.ca</span>
+  <div class="cible-montant" id="montant"></div>
+</div>
+
+<h2>Comment faire</h2>
+<ol>
+  <li>Ouvre l'application de ta banque, ou son site web.</li>
+  <li>Choisis <b>Virement Interac</b> (parfois nommé « Virement e-Transfer »).</li>
+  <li>Comme destinataire, entre le courriel <b>support@vibegay.ca</b>.</li>
+  <li>Inscris le montant correspondant à ton adhésion.</li>
+  <li>Dans le <b>message</b> du virement, écris le courriel avec lequel tu t'es inscrit sur VIBE. C'est ce qui nous permet de retrouver ton compte.</li>
+  <li>Envoie. Ton accès est activé dès réception, au maximum <b>24 heures</b>.</li>
+</ol>
+
+<p class="note">
+  Si ta banque demande une question de sécurité, utilise <b>VIBE</b> comme question
+  et <b>vibe</b> comme réponse. La plupart des banques canadiennes utilisent le dépôt
+  automatique et ne poseront pas la question.
+</p>
+
+<h2>Montants</h2>
+<table>
+  <tr><th>Adhésion</th><th style="text-align:right">Montant</th></tr>
+  <tr data-cle="pionnier"><td>Pass Pionnier — 1 an, versement unique (4 Extras inclus)</td><td class="prix">149 $</td></tr>
+  <tr data-cle="mois1"><td>Abonnement 1 mois</td><td class="prix">29,99 $</td></tr>
+  <tr data-cle="mois3"><td>Abonnement 3 mois</td><td class="prix">74,99 $</td></tr>
+  <tr data-cle="mois6"><td>Abonnement 6 mois</td><td class="prix">119,99 $</td></tr>
+  <tr data-cle="an1"><td>Abonnement 1 an</td><td class="prix">179,99 $</td></tr>
+  <tr data-cle="boost"><td>Boost 24 h</td><td class="prix">9,99 $</td></tr>
+  <tr data-cle="fantome"><td>Mode Fantôme — 7 jours</td><td class="prix">12,99 $</td></tr>
+  <tr data-cle="visites"><td>Qui m'a consulté</td><td class="prix">9,99 $</td></tr>
+  <tr data-cle="montre"><td>Connexion Montre intelligente (incluse pour les Pionniers)</td><td class="prix">14,99 $</td></tr>
+  <tr data-cle="tribunal"><td>Pardon Tribunal</td><td class="prix">49 $</td></tr>
+</table>
+
+<h2>Questions fréquentes</h2>
+<p><b style="color:#fff">Combien de temps avant l'activation ?</b><br>
+Au maximum 24 heures. En pratique, souvent bien moins.</p>
+
+<p><b style="color:#fff">Et si je me trompe de montant ?</b><br>
+Écris-nous à <a href="/contact.html">la page contact</a>. Rien n'est perdu, on corrige.</p>
+
+<p><b style="color:#fff">Puis-je être remboursé ?</b><br>
+Oui. Conformément à la Loi sur la protection du consommateur du Québec, tu disposes
+de <b>10 jours</b> après le paiement pour annuler et être remboursé intégralement si
+le service n'a pas encore été utilisé. Voir les
+<a href="/conditions.html">conditions d'utilisation</a>.</p>
+
+<p><b style="color:#fff">Le renouvellement est-il automatique ?</b><br>
+Non. Aucun prélèvement ne survient sans une nouvelle action de ta part.</p>
+
+<footer>
+  Une question ? <a href="/contact.html">Écris-nous</a> ·
+  <a href="/conditions.html">Conditions</a> ·
+  <a href="/confidentialite.html">Confidentialité</a>
+</footer>
+</div>
+
+<script>
+// Met en évidence la ligne correspondant à l'achat choisi, quand la page
+// est ouverte depuis un bouton du site (/paiement.html?p=pionnier).
+(function () {
+  var cle = new URLSearchParams(location.search).get('p');
+  if (!cle) return;
+
+  var ligne = document.querySelector('tr[data-cle="' + CSS.escape(cle) + '"]');
+  if (!ligne) return;
+
+  ligne.classList.add('actif');
+
+  var libelle = ligne.cells[0].textContent;
+  var prix = ligne.cells[1].textContent.trim();
+  document.getElementById('montant').textContent = prix + ' — ' + libelle;
+})();
+</script>
+</body>
+</html>

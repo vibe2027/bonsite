@@ -1,0 +1,162 @@
+
+          `<input id="acces-email" placeholder="courriel du membre" style="flex:1;min-width:140px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.2);color:#fff;padding:6px 8px;font-size:0.48rem;font-family:Share Tech Mono,monospace">`+
+          `<input id="acces-mois" type="number" placeholder="mois (0=à vie)" value="12" style="width:90px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.2);color:#fff;padding:6px 8px;font-size:0.48rem;font-family:Share Tech Mono,monospace">`+
+          `<button onclick="adminOffrirAcces(this)" style="background:rgba(180,79,255,0.8);border:none;color:#000;padding:6px 12px;font-size:0.44rem;letter-spacing:1px;cursor:pointer;font-family:Share Tech Mono,monospace">🎁 OFFRIR</button>`+
+        `</div>`+
+        `<div style="color:rgba(180,79,255,0.6);margin-bottom:10px">AJOUTER UN CO-FONDATEUR</div>`+
+        `<div style="font-size:0.42rem;color:rgba(255,255,255,0.4);margin-bottom:8px;line-height:1.6">Donne accès complet au panneau admin de la plateforme (vérification photos, signalements, offrir accès). N'inclut PAS Stripe, Supabase ou GitHub — ces accès se donnent séparément, directement dans ces plateformes.</div>`+
+        `<div style="display:flex;gap:6px">`+
+          `<input id="cofondateur-email" placeholder="courriel du co-fondateur" style="flex:1;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.2);color:#fff;padding:6px 8px;font-size:0.48rem;font-family:Share Tech Mono,monospace">`+
+          `<button onclick="adminAjouterCofondateur(this)" style="background:transparent;border:0.5px solid rgba(180,79,255,0.5);color:rgba(180,79,255,0.9);padding:6px 12px;font-size:0.44rem;letter-spacing:1px;cursor:pointer;font-family:Share Tech Mono,monospace">+ AJOUTER</button>`+
+        `</div>`;
+    }
+    el.innerHTML=html||'Aucune donnée.';
+  }catch(err){el.innerHTML='Erreur: '+err.message;}
+}
+
+async function adminOffrirAcces(btn){
+  const email=document.getElementById('acces-email').value.trim();
+  const mois=parseInt(document.getElementById('acces-mois').value,10)||0;
+  if(!email){showError('⚠ Courriel requis.');return;}
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const {data:rows,error:eSearch}=await _supa.from('profiles').select('id,real_email').eq('real_email',email).limit(1);
+    if(eSearch||!rows?.length){showError('⚠ Membre introuvable.');btn.disabled=false;btn.textContent='🎁 OFFRIR';return;}
+    const {data,error}=await _supa.rpc('admin_offrir_acces',{p_id:rows[0].id,p_mois:mois});
+    if(error||!data?.ok){showError('⚠ '+(data?.error||'Erreur.'));btn.disabled=false;btn.textContent='🎁 OFFRIR';return;}
+    showSuccess('✦ Accès offert !');btn.textContent='✓ FAIT';
+  }catch(e){showError('⚠ Erreur.');btn.disabled=false;btn.textContent='🎁 OFFRIR';}
+}
+
+async function adminAjouterCofondateur(btn){
+  const email=document.getElementById('cofondateur-email').value.trim();
+  if(!email){showError('⚠ Courriel requis.');return;}
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const {data,error}=await _supa.rpc('admin_ajouter_cofondateur',{p_email:email});
+    if(error||!data?.ok){showError('⚠ '+(data?.error||'Erreur.'));btn.disabled=false;btn.textContent='+ AJOUTER';return;}
+    showSuccess('✦ Co-fondateur ajouté ! Il doit créer un compte avec ce courriel.');btn.textContent='✓ FAIT';
+  }catch(e){showError('⚠ Erreur.');btn.disabled=false;btn.textContent='+ AJOUTER';}
+}
+
+async function adminVerifierPhoto(id,btn){
+  btn.disabled=true;btn.textContent='...';
+  const {data,error}=await _supa.rpc('admin_verifier_photo',{p_id:id,p_verifie:true});
+  if(error||!data?.ok){btn.textContent='Erreur';return;}
+  btn.closest('div').style.opacity='0.3';btn.textContent='✓ FAIT';
+}
+
+async function adminSuspendreProfil(id,btn){
+  if(!confirm('Suspendre ce compte ? Le profil sera immédiatement masqué et le compte bloqué.'))return;
+  btn.disabled=true;btn.textContent='...';
+  const {data,error}=await _supa.rpc('admin_suspendre_profil',{p_id:id});
+  if(error||!data?.ok){btn.textContent='Erreur';return;}
+  btn.closest('div').style.opacity='0.3';btn.textContent='✕ SUSPENDU';
+}
+
+// --
+// SESSION
+// --
+(async()=>{
+  try{
+    const {data:{user}}=await _supa.auth.getUser();
+    if(user){
+      CURRENT_USER=user;
+      IS_ADMIN=(user.email===ADMIN_EMAIL||user.user_metadata?.role==='superadmin');
+      const prenom=user.user_metadata?.prenom||'Membre';
+      const hudBtn=document.querySelector('.hud-connexion');
+      if(hudBtn){
+        hudBtn.textContent=(IS_ADMIN?'✦ Admin · ':'')+prenom;
+        hudBtn.style.color='#D4AF37';
+        hudBtn.onclick=IS_ADMIN?()=>showAdminPanel():()=>_supa.auth.signOut().then(()=>location.reload());
+      }
+      if(IS_ADMIN){
+        const tf=document.getElementById('tribunal-form');const ts=document.getElementById('trib-success');
+        if(tf)tf.style.display='none';
+        if(ts){ts.style.display='block';ts.innerHTML='✦ Compte admin — immunisé du tribunal.';}
+        showAdminPanel();
+      }
+    }
+  }catch(e){}
+  _supa.auth.onAuthStateChange((ev)=>{
+    if(ev==='SIGNED_OUT'){CURRENT_USER=null;IS_ADMIN=false;location.reload();}
+  });
+})();
+
+
+
+
+// --
+// GLOBE RÉALISTE (textures NASA — adapté de Lumina Spark)
+// --
+(function(){
+  const canvas=document.getElementById('globe-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  if(!ctx)return;
+
+  const DAY_URL="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg";
+  const NIGHT_URL="https://unpkg.com/three-globe/example/img/earth-night.jpg";
+  const cities=[
+    {name:"Québec",lat:46.81,lon:-71.21},
+    {name:"Montréal",lat:45.5,lon:-73.56},
+    {name:"Ottawa",lat:45.42,lon:-75.7},
+    {name:"Toronto",lat:43.65,lon:-79.38},
+    {name:"Vancouver",lat:49.28,lon:-123.12}
+  ];
+  cities.forEach(c=>c.nb=0);
+  (async()=>{
+    try{
+      const {data}=await _supa.rpc('membres_par_ville');
+      (data||[]).forEach(row=>{
+        const c=cities.find(c=>c.name.toLowerCase()===String(row.ville).toLowerCase());
+        if(c)c.nb=row.nb;
+      });
+    }catch(e){}
+  })();
+
+  let tex=null, rot=0, raf=0;
+  let gDragging=false, gLastX=0, gVel=0, gLastTouch=0;
+  const internal=256;
+  canvas.width=internal;canvas.height=internal;
+  const img=ctx.createImageData(internal,internal);
+  const buf=img.data;
+  const cx=internal/2, cy=internal/2, r=internal/2-4;
+
+  function loadTex(){
+    const load=(url)=>new Promise((res,rej)=>{
+      const im=new Image();im.crossOrigin="anonymous";
+      im.onload=()=>res(im);im.onerror=rej;im.src=url;
+    });
+    return Promise.all([load(DAY_URL),load(NIGHT_URL)]).then(([day,night])=>{
+      const w=1024,h=512;
+      const off=document.createElement("canvas");off.width=w;off.height=h;
+      const o=off.getContext("2d");
+      o.drawImage(day,0,0,w,h);const dD=o.getImageData(0,0,w,h);
+      o.clearRect(0,0,w,h);o.drawImage(night,0,0,w,h);const nD=o.getImageData(0,0,w,h);
+      return {day:dD,night:nD,w,h};
+    });
+  }
+
+  function render(){
+    if(window.VIBE_FX_PAUSE){raf=requestAnimationFrame(render);return;}
+    // Interaction : inertie + reprise de la rotation auto après 2,5 s d'inactivité
+    if(gDragging){/* rot contrôlé par le doigt */}
+    else if(Math.abs(gVel)>0.00005){rot+=gVel;gVel*=0.95;}
+    else if(Date.now()-gLastTouch>2500){rot+=0.0018;}
+    const tilt=(-18*Math.PI)/180, cosT=Math.cos(tilt), sinT=Math.sin(tilt);
+    const sunX=-0.35,sunY=0.5,sunZ=0.79;
+    for(let y=0;y<internal;y++){
+      for(let x=0;x<internal;x++){
+        const i=(y*internal+x)*4;
+        const dx=(x-cx)/r, dy=(y-cy)/r, d2=dx*dx+dy*dy;
+        if(d2>1){buf[i+3]=0;continue;}
+        const nx=dx, ny=-dy, nz=Math.sqrt(1-d2);
+        const ny2=ny*cosT+nz*sinT, nz2=-ny*sinT+nz*cosT;
+        const lat=Math.asin(ny2), lon=Math.atan2(nx,nz2)-rot;
+        let u=0.5+lon/(2*Math.PI);u=u-Math.floor(u);
+        const v=0.5-lat/Math.PI;
+        const light=Math.max(0,nx*sunX+ny*sunY+nz*sunZ);
+        let R=10,G=20,B=40;
+        if(tex){
+          const tx=Math.min(tex.w-1,Math.floor

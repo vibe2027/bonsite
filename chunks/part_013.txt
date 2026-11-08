@@ -1,0 +1,140 @@
+tut:'active',
+      notes:`GPS:${gpsData.lat},${gpsData.lng}|Acc:${gpsData.accuracy||'N/A'}`
+    });
+    if(error)throw error;
+  }catch(e){
+    angelSaveFailed=true;
+    console.error('Mode Ange: echec envoi alerte',e);
+  }
+
+  // Flash rouge sur l'écran
+  const flash=document.createElement('div');
+  flash.style.cssText='position:fixed;inset:0;z-index:5000;background:rgba(255,0,0,0.08);pointer-events:none;animation:sos-flash 0.6s ease-in-out 3';
+  const style=document.createElement('style');
+  style.textContent='@keyframes sos-flash{0%,100%{opacity:0}50%{opacity:1}}';
+  document.head.appendChild(style);
+  document.body.appendChild(flash);
+  setTimeout(()=>{flash.remove();style.remove()},2000);
+
+  if(angelSaveFailed){
+    txt.textContent='⚠ Echec de l\'envoi — reessaie';
+    setAngelStatus('flow','ECHEC envoi alerte','alert');
+    showError('⚠ Mode Ange : l\'alerte n\'a PAS pu etre envoyee. Reessaie ou contacte les secours directement.');
+  }else{
+    txt.textContent='✦ Ange gardien activé — aide en route';
+    setAngelStatus('flow','Alerte envoyée','alert');
+    showSuccess('✦ Mode Ange activé — alerte envoyée !');
+  }
+  loadStats();
+  setTimeout(()=>{
+    txt.textContent='⚡ Activer Mode Ange Gardien';
+    btn.style.borderColor='';btn.style.color='';sosActive=false;
+    setAngelStatus('flow','Prêt','ready');
+    if(gpsData.accuracy)setAngelStatus('gps','GPS OK · '+gpsData.accuracy,'ready');
+  },8000);
+}
+
+// --
+// INSCRIPTION (2 plans : Fondateur / Gratuit)
+// --
+function choisirPlan(plan){
+  document.getElementById('plan-choisi').value=plan;
+  const fCard=document.getElementById('planFounder');
+  const gCard=document.getElementById('planFree');
+  const fBadge=document.getElementById('founder-badge');
+  const btn=document.querySelector('#signup-form .btn-submit span');
+  if(plan==='founder'){
+    fCard.classList.add('selected');gCard.classList.remove('selected');
+    if(fBadge)fBadge.style.display='';
+    if(btn)btn.textContent='Réserver ma place — 99 $ / an';
+  }else{
+    gCard.classList.add('selected');fCard.classList.remove('selected');
+    if(fBadge)fBadge.style.display='none';
+    if(btn)btn.textContent='Créer mon compte gratuit';
+  }
+}
+
+async function handleSignup(e){
+  e.preventDefault();
+  const plan=document.getElementById('plan-choisi')?.value||'free';
+  const estFondateur=(plan==='founder');
+  const prenom=document.getElementById('prenom').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const mdp=document.getElementById('mdp').value;
+  const ville=document.getElementById('ville')?.value||'';
+  const cgu=document.getElementById('cgu').checked;
+  const hp=document.getElementById('hp-field');
+  const btn=document.querySelector('#signup-form .btn-submit');
+
+  if(hp?.value)return;
+  if(!prenom||prenom.length<2){showError('⚠ Prénom invalide.');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('⚠ Courriel invalide.');return;}
+  if(mdp.length<8||!/[A-Z]/.test(mdp)||!/[0-9]/.test(mdp)){showError('⚠ Mot de passe trop faible — min. 8 car., 1 majuscule, 1 chiffre.');return;}
+  const age18=document.getElementById('age18')?.checked;
+  if(!age18){showError('⚠ VIBE est réservé aux 18 ans et plus.');return;}
+  if(!cgu){showError('⚠ Tu dois accepter les conditions.');return;}
+  if(btn){btn.disabled=true;btn.querySelector('span').textContent='Création en cours...';}
+
+  try{
+    if(estFondateur){
+      const {data:preStats}=await _supa.rpc('stats_publiques');
+      if((preStats?.membres||0)>=MAX_FOUNDERS){showError('⚠ Toutes les places fondateur sont prises.');if(btn){btn.disabled=false;btn.querySelector('span').textContent='Réserver ma place — 99 $ / an';}return;}
+    }
+    const identitesInscription=Array.isArray(window.signupIdentites)?window.signupIdentites.slice(0,7):[];
+    const {data:authData,error:authError}=await _supa.auth.signUp({email,password:mdp,options:{data:{prenom,ville,plan,identites:identitesInscription}}});
+    if(authError)throw authError;
+    await _supa.from('landing_inscriptions').insert({prenom,email,ville,statut:estFondateur?'inscrit':'membre_gratuit'});
+    document.getElementById('signup-form').style.display='none';
+    const suc=document.getElementById('signup-success');
+    suc.style.display='block';
+    const accent=estFondateur?'#D4AF37':'#3bb6ff';
+    const accentRgb=estFondateur?'212,175,55':'0,170,255';
+    suc.innerHTML='<div style="padding:40px;text-align:center;border:1px solid rgba('+accentRgb+',0.3);background:rgba(0,0,0,0.6)">'+
+      '<div style="font-size:2rem;margin-bottom:16px">✦</div>'+
+      '<div style="font-family:Playfair Display,serif;font-size:1.4rem;color:'+accent+';margin-bottom:12px">Bienvenue, '+prenom+' !</div>'+
+      '<div style="font-size:0.58rem;color:rgba(255,255,255,0.72);letter-spacing:2px;line-height:2;margin-bottom:20px;font-family:Share Tech Mono,monospace">'+
+      'Ton compte VIBE est créé.<br>Vérifie ton courriel <span style="color:'+accent+'">'+email+'</span><br>pour confirmer ton accès.</div>'+
+      '<div style="font-size:0.46rem;color:'+accent+';letter-spacing:3px;font-family:Share Tech Mono,monospace">'+(estFondateur?'Place Pionnier réservée · 99 $CAD / an':'Membre Gratuit · Bienvenue dans la communauté')+'</div>'+
+      (estFondateur?
+      '<div style="margin-top:26px;padding-top:22px;border-top:1px solid rgba(212,175,55,0.25)">'+
+        '<div style="font-size:0.55rem;color:rgba(255,255,255,0.85);letter-spacing:2px;margin-bottom:16px;font-family:Share Tech Mono,monospace">Complète ton paiement de 99 $CAD pour activer ton Pass Pionnier :</div>'+
+        '<div style="font-size:0.5rem;color:rgba(255,255,255,0.7);letter-spacing:1.5px;line-height:2;font-family:Share Tech Mono,monospace;margin-top:8px">Par <span style="color:#D4AF37">virement Interac</span> à :<br><span style="color:#fff;font-size:0.72rem;user-select:all;display:inline-block;margin:8px 0">support@vibegay.ca</span><br>Indique ton courriel d\'inscription dans le message du virement.<br>Ton statut Pionnier est activé dès réception (max 24 h).</div>'+
+        '<a href="/paiement.html?p=pionnier" style="display:inline-block;margin-top:14px;padding:12px 30px;background:#D4AF37;color:#000;font-family:Share Tech Mono,monospace;font-size:0.58rem;letter-spacing:3px;text-decoration:none;font-weight:700;border-radius:3px">MARCHE À SUIVRE DÉTAILLÉE</a>'+
+      '</div>':'')+'</div>';
+    showSuccess('✦ Compte créé — vérifie ton courriel !');
+    loadStats();
+  }catch(err){
+    if(btn){btn.disabled=false;btn.querySelector('span').textContent=estFondateur?'Réserver ma place — 99 $ / an':'Créer mon compte gratuit';}
+    showError('⚠ '+(err.message&&err.message.includes('already registered')?'Ce courriel est déjà inscrit.':err.message||'Erreur.'));
+  }
+}
+
+// --
+// TRIBUNAL
+// --
+async function handleSignalement(e){
+  e.preventDefault();
+  if(IS_ADMIN){showError('⚠ Compte admin — immunisé du tribunal.');return;}
+  const pseudo=document.getElementById('trib-pseudo').value.trim()||'Anonyme';
+  const accuse=document.getElementById('trib-accuse').value.trim();
+  const motif=document.getElementById('trib-motif').value;
+  const details=document.getElementById('trib-details').value.trim();
+  const btn=e.target.querySelector('.trib-submit');
+  const suc=document.getElementById('trib-success');
+  if(!motif){showError('⚠ Choisis un motif.');return;}
+  if(!accuse){showError('⚠ Indique le pseudo du membre visé.');return;}
+  if(btn){btn.disabled=true;btn.textContent='Envoi...';}
+  try{
+    await _supa.from('tribunal_signalements').insert({pseudo_reporter:pseudo.slice(0,30),accused_username:accuse.slice(0,30),motif,details:details.slice(0,500)||null,statut:'en_examen'});
+    document.getElementById('tribunal-form').style.display='none';
+    suc.style.display='block';
+    suc.innerHTML='✦ Signalement soumis — le jury examine dans les 24h.';
+    loadStats();
+  }catch(err){
+    if(btn){btn.disabled=false;btn.textContent='Soumettre au tribunal ↗';}
+    showError('⚠ '+(err.message||'Erreur.'));
+  }
+}
+
+// --
+// ÉV

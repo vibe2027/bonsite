@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 VIBE Setup Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .task.completed {
+            background: #d4edda;
+            opacity: 0.6;
+        }
+
+        .task input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .task-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .task-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .task-link:hover {
+            text-decoration: underline;
+        }
+
+        .time-estimate {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .summary {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .summary h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .reset-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .reset-btn:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 VIBE Production Setup</h1>
+            <p>Complete this checklist to get your site online with 24/7 monitoring</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- SECTION 1: SECRETS -->
+            <div class="section">
+                <div class="section-title">📋 Step 1: Get Your Secrets (5 min)</div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Get Supabase Keys</div>
+                        <div class="task-desc">
+                            Go to <a href="https://app.supabase.com" class="task-link" target="_blank">Supabase Dashboard</a>
+                            → Settings → API
+                            <br>Copy: Project URL, anon key, service_role key
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Get Stripe Keys</div>
+                        <div class="task-desc">
+                            Go to <a href="https://dashboard.stripe.com" class="task-link" target="_blank">Stripe Dashboard</a>
+                            → Developers → API Keys
+                            <br>Copy: Public key (pk_), Secret key (sk_), Webhook secret (whsec_)
+                            <br>Also copy 2 Price IDs from Products
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: NETLIFY -->
+            <div class="section">
+                <div class="section-title">🌐 Step 2: Deploy on Netlify (10 min)</div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Create Netlify Site</div>
+                        <div class="task-desc">
+                            Go to <a href="https://app.netlify.com" class="task-link" target="_blank">Netlify Dashboard</a>
+                            → "New site from Git"
+                            <br>Select: GitHub → vibe2027/VIBE → Deploy
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Add 10 Environment Variables</div>
+                        <div class="task-desc">
+                            Settings → Build & deploy → Environment
+                            <br>Add all 10 variables from your Supabase & Stripe keys
+                            <br>See COPY-PASTE-GUIDE.md for exact values
+                        </div>
+                        <div class="time-estimate">3 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Redeploy & Wait for Green ✅</div>
+                        <div class="task-desc">
+                            Deployments → Latest → Click "Redeploy"
+                            <br>Wait for green checkmark (2-3 minutes)
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Test Site Works</div>
+                        <div class="task-desc">
+                            Run: <code>curl https://vibegay.ca/api/health</code>
+                            <br>Should return: <code>"status":"ok"</code>
+                        </div>
+                        <div class="time-estimate">1 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: MONITORING -->
+            <div class="section">
+                <div class="section-title">📡 Step 3: Setup Monitoring (5 min)</div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Create UptimeRobot Account</div>
+                        <div class="task-desc">
+                            Go to <a href="https://uptimerobot.com" class="task-link" target="_blank">UptimeRobot</a>
+                            → Sign Up → Verify Email
+                        </div>
+                        <div class="time-estimate">2 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Add Monitor</div>
+                        <div class="task-desc">
+                            "Add New Monitor"
+                            <br>URL: <code>https://vibegay.ca/api/health</code>
+                            <br>Interval: 5 minutes
+                        </div>
+                        <div class="time-estimate">2 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Add Email Alert</div>
+                        <div class="task-desc">
+                            Monitor → Alerts → Email
+                            <br>You'll get email if site goes down
+                        </div>
+                        <div class="time-estimate">1 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: SLACK -->
+            <div class="section">
+                <div class="section-title">💬 Step 4: Setup Slack Alerts (5 min)</div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Create Slack App</div>
+                        <div class="task-desc">
+                            Go to <a href="https://api.slack.com/apps" class="task-link" target="_blank">Slack Apps</a>
+                            → "Create New App" → "From scratch"
+                            <br>Name: VIBE Alerts → Create
+                        </div>
+                        <div class="time-estimate">2 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Enable Webhooks & Copy URL</div>
+                        <div class="task-desc">
+                            Left sidebar → "Incoming Webhooks" → Toggle ON
+                            <br>"Add New Webhook" → Select channel → Allow
+                            <br>Copy webhook URL (https://hooks.slack.com/...)
+                        </div>
+                        <div class="time-estimate">2 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Add to GitHub Secrets</div>
+                        <div class="task-desc">
+                            Go to <a href="https://github.com/vibe2027/VIBE/settings/secrets/actions" class="task-link" target="_blank">GitHub Settings → Secrets</a>
+                            <br>"New secret" → Name: SLACK_WEBHOOK_URL
+                            <br>Value: [PASTE webhook URL]
+                        </div>
+                        <div class="time-estimate">1 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: RAILWAY -->
+            <div class="section">
+                <div class="section-title">🚄 Step 5: Setup Railway Fallback (15 min)</div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Deploy on Railway</div>
+                        <div class="task-desc">
+                            Go to <a href="https://railway.app" class="task-link" target="_blank">Railway</a>
+                            → "Start Project" → "Deploy from GitHub"
+                            <br>Select: vibe2027/VIBE → Deploy
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Add 10 Environment Variables</div>
+                        <div class="task-desc">
+                            Project → Variables
+                            <br>Add same 10 as Netlify
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <input type="checkbox" class="task-check">
+                    <div class="task-content">
+                        <div class="task-title">Test Railway Works</div>
+                        <div class="task-desc">
+                            Get Railway URL from Deployments
+                            <br>Run: <code>curl https://[railway-url]/api/health</code>
+                            <br>Save this URL for emergencies!
+                        </div>
+                        <div class="time-estimate">5 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINAL SUMMARY -->
+            <div class="summary">
+                <h3>✅ Setup Complete!</h3>
+                <p>Your site now has:</p>
+                <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                    <li>🟢 <strong>Netlify</strong> - Primary hosting (LIVE NOW)</li>
+                    <li>📡 <strong>UptimeRobot</strong> - Monitors every 5 min</li>
+                    <li>💬 <strong>Slack Alerts</strong> - Instant notifications</li>
+                    <li>🚀 <strong>Railway</strong> - Fallback if Netlify dies</li>
+                    <li>⚙️ <strong>GitHub Actions</strong> - 24/7 healthchecks</li>
+                </ul>
+
+                <div class="stats" style="margin-top: 20px;">
+                    <div class="stat">
+                        <div class="stat-value" id="completedCount">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="percentComplete">0%</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                </div>
+
+                <button class="reset-btn" onclick="resetAll()">↺ Reset All</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Questions? Read: <a href="#">COPY-PASTE-GUIDE.md</a> | <a href="#">INCIDENT-PLAYBOOK.md</a></p>
+            <p>Total Time: ~50 minutes | Result: 99.9% uptime guarantee</p>
+        </div>
+    </div>
+
+    <script>
+        const checks = document.querySelectorAll('.task-check');
+        const progressBar = document.getElementById('progressBar');
+        const completedCount = document.getElementById('completedCount');
+        const totalCount = document.getElementById('totalCount');
+        const percentComplete = document.getElementById('percentComplete');
+
+        function updateProgress() {
+            const completed = document.querySelectorAll('.task-check:checked').length;
+            const total = checks.length;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            progressBar.style.width = percent + '%';
+            completedCount.textContent = completed;
+            totalCount.textContent = total;
+            percentComplete.textContent = percent + '%';
+
+            // Save to localStorage
+            localStorage.setItem('vibe-setup-progress', JSON.stringify(
+                Array.from(checks).map(c => c.checked)
+            ));
+        }
+
+        function resetAll() {
+            if (confirm('Reset all progress?')) {
+                checks.forEach(c => c.checked = false);
+                localStorage.removeItem('vibe-setup-progress');
+                updateProgress();
+            }
+        }
+
+        // Load from localStorage
+        const saved = localStorage.getItem('vibe-setup-progress');
+        if (saved) {
+            const progress = JSON.parse(saved);
+            progress.forEach((checked, i) => {
+                if (checks[i]) checks[i].checked = checked;
+            });
+        }
+
+        // Add click handlers
+        checks.forEach(check => {
+            check.addEventListener('change', () => {
+                check.closest('.task').classList.toggle('completed');
+                updateProgress();
+            });
+        });
+
+        // Initial update
+        updateProgress();
+    </script>
+</body>
+</html>

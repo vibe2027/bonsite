@@ -1,0 +1,168 @@
+hadowColor='rgba(255,120,20,0.9)';vctx.shadowBlur=10;vctx.fill();
+  }
+  vctx.shadowBlur=0;vctx.restore();
+  if(vSmoke.length<26&&Math.random()<0.5)vSmoke.push({x:Math.random()*VW,y:VH*0.9,r:35+Math.random()*70,vx:(Math.random()-0.5)*0.5,vy:-(0.5+Math.random()*0.9),a:0,amax:0.10+Math.random()*0.12,ph:Math.random()*Math.PI*2});
+  vSmoke=vSmoke.filter(p=>p.y>-p.r);
+  for(const p of vSmoke){
+    p.ph+=0.012;p.x+=p.vx+Math.sin(p.ph)*0.5;p.y+=p.vy;p.r+=0.25;
+    p.a=p.y>VH*0.35?Math.min(p.a+0.002,p.amax):p.a*0.995;
+    const g=vctx.createRadialGradient(p.x,p.y,p.r*0.2,p.x,p.y,p.r);
+    g.addColorStop(0,'rgba(60,10,6,'+p.a+')');g.addColorStop(1,'rgba(10,2,2,0)');
+    vctx.fillStyle=g;vctx.beginPath();vctx.arc(p.x,p.y,p.r,0,Math.PI*2);vctx.fill();
+  }
+  const vg=vctx.createRadialGradient(VW/2,VH/2,VH*0.22,VW/2,VH/2,VH*0.9);
+  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,0.72)');
+  vctx.fillStyle=vg;vctx.fillRect(0,0,VW,VH);
+}
+function vLoop(){vt++;if(vmode==='ange')drawAngelFX();else drawDevilFX();vraf=requestAnimationFrame(vLoop);}
+
+window.montrerVerdict=function(m){
+  vmode=m;vResize();vt=0;
+  vFeathers=[];vDust=[];vEmbers=[];vSmoke=[];vFlames=[];
+  window.VIBE_FX_PAUSE=true;
+  const txt=document.getElementById('verdict-text');
+  const sub=document.getElementById('verdict-sub');
+  txt.className='verdict-text';sub.className='verdict-sub';
+  document.getElementById('verdict-close').className='';
+  ov.classList.remove('shake');
+  if(m==='ange'){
+    txt.textContent='NON COUPABLE';txt.style.color='#FFEBB0';
+    txt.style.textShadow='0 0 40px rgba(255,225,150,0.9),0 0 110px rgba(255,210,120,0.5)';
+    sub.textContent='La communauté a tranché · Innocence reconnue';
+  }else{
+    txt.textContent='COUPABLE';txt.style.color='#FF3A16';
+    txt.style.textShadow='0 0 40px rgba(255,60,20,0.9),0 0 110px rgba(200,20,0,0.55)';
+    sub.textContent='Verdict de la communauté · 7 jours en lecture seule';
+    setTimeout(()=>ov.classList.add('shake'),900);
+  }
+  ov.classList.add('show');
+  requestAnimationFrame(()=>{
+    txt.classList.add('appear');sub.classList.add('appear');
+    document.getElementById('verdict-close').classList.add('appear');
+  });
+  if(vraf)cancelAnimationFrame(vraf);
+  vLoop();
+};
+window.fermerVerdict=function(){
+  ov.classList.remove('show','shake');
+  if(vraf)cancelAnimationFrame(vraf);
+  window.VIBE_FX_PAUSE=false;
+};
+})();
+
+// Salle d'audience : liste des dossiers + vote
+async function chargerAudience(){
+  const list=document.getElementById('audience-list');
+  if(!list)return;
+  try{
+    const{data,error}=await _supa.from('tribunal_signalements')
+      .select('id,motif,details,created_at,votes_coupable,votes_innocent')
+      .eq('statut','en_examen').order('created_at',{ascending:false}).limit(5);
+    if(error)throw error;
+    if(!data||!data.length){list.innerHTML='<div class="aud-empty">Aucun dossier en examen. La communauté est en paix.</div>';return;}
+    list.innerHTML=data.map(d=>{
+      const det=d.details?String(d.details).replace(/</g,'&lt;').slice(0,200):'';
+      const mot=String(d.motif||'').replace(/</g,'&lt;');
+      return '<div class="aud-card">'+
+        '<div class="aud-motif">⚖ '+mot+'</div>'+
+        (det?'<div class="aud-details">'+det+'</div>':'')+
+        '<div class="aud-counts">Coupable : '+(d.votes_coupable||0)+' · Innocent : '+(d.votes_innocent||0)+'</div>'+
+        '<div class="aud-btns">'+
+        '<button class="aud-btn innocent" onclick="voterVerdict(\''+d.id+'\',\'innocent\',this)">☩ NON COUPABLE</button>'+
+        '<button class="aud-btn coupable" onclick="voterVerdict(\''+d.id+'\',\'coupable\',this)">▼ COUPABLE</button>'+
+        '</div></div>';
+    }).join('');
+  }catch(e){list.innerHTML='<div class="aud-empty">Salle d\'audience indisponible.</div>';}
+}
+async function voterVerdict(id,verdict,btn){
+  const pin=document.getElementById('aud-pseudo');
+  const pseudo=(pin&&pin.value?pin.value:'').trim()||localStorage.getItem('vibe_jure')||'';
+  if(pseudo.length<2){if(pin){pin.focus();pin.style.borderColor='rgba(220,50,50,0.7)';}return;}
+  localStorage.setItem('vibe_jure',pseudo);
+  if(btn)btn.disabled=true;
+  try{
+    const{data,error}=await _supa.rpc('voter_tribunal',{p_signalement:id,p_pseudo:pseudo,p_verdict:verdict});
+    if(error)throw error;
+    if(data&&data.ok){
+      montrerVerdict(verdict==='innocent'?'ange':'demon');
+      chargerAudience();
+    }else if(data&&data.error==='deja_vote'){
+      if(btn){btn.textContent='DÉJÀ VOTÉ';setTimeout(()=>chargerAudience(),1500);}
+    }else{
+      if(btn){btn.disabled=false;}
+    }
+  }catch(e){if(btn)btn.disabled=false;}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const pin=document.getElementById('aud-pseudo');
+  if(pin&&localStorage.getItem('vibe_jure'))pin.value=localStorage.getItem('vibe_jure');
+  chargerAudience();
+});
+
+
+// ── Réinitialisation du mot de passe (lien du courriel) ──
+_supa.auth.onAuthStateChange((event)=>{
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('reset-modal').classList.add('open');
+  }
+});
+async function handleResetPassword(e){
+  e.preventDefault();
+  const p1=document.getElementById('reset-pass1').value;
+  const p2=document.getElementById('reset-pass2').value;
+  if(p1!==p2){showError('⚠ Les deux mots de passe correspondent pas.');return;}
+  try{
+    const {error}=await _supa.auth.updateUser({password:p1});
+    if(error)throw error;
+    document.getElementById('reset-modal').classList.remove('open');
+    showSuccess('✦ Mot de passe changé ! T\'es connecté.');
+    setTimeout(()=>location.reload(),1600);
+  }catch(err){showError('⚠ '+(err.message||'Erreur.'));}
+}
+
+// -- MESSAGERIE PRIVÉE --
+let priveAvec=null,priveNom='',priveChan=null;
+function ouvrirPrive(uid,nom){
+  if(!CURRENT_USER){showError('⚠ Connecte-toi pour écrire en privé.');openLogin();return;}
+  if(uid===CURRENT_USER.id)return;
+  priveAvec=uid;priveNom=nom;
+  document.getElementById('prive-nom').textContent=nom;
+  document.getElementById('prive-modal').classList.add('open');
+  chargerPrive();
+  if(priveChan)_supa.removeChannel(priveChan);
+  priveChan=_supa.channel('mp_'+uid)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages_prives'},p=>{
+      const m=p.new;
+      if((m.expediteur===priveAvec&&m.destinataire===CURRENT_USER.id)||(m.expediteur===CURRENT_USER.id&&m.destinataire===priveAvec)){
+        ajouterPriveMsg(m);
+      }
+    }).subscribe();
+}
+function fermerPrive(){
+  document.getElementById('prive-modal').classList.remove('open');
+  if(priveChan){_supa.removeChannel(priveChan);priveChan=null;}
+  priveAvec=null;
+}
+document.getElementById('prive-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)fermerPrive()});
+
+// Refloute immédiatement toutes les photos privées dès que la page perd le
+// premier plan : changement d'application, bascule d'onglet, verrouillage de
+// l'écran. La plupart des captures et des enregistrements d'écran passent par
+// là — l'image est déjà floutée quand l'appareil la saisit.
+function floutterPhotosPrivees(){
+  document.querySelectorAll('#prive-msgs img[data-floutable]').forEach(img=>{
+    img.style.filter='blur(22px)';
+    const hint=img.parentElement&&img.parentElement.querySelector('.reveal-hint');
+    if(hint)hint.style.display='flex';
+  });
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)floutterPhotosPrivees()});
+window.addEventListener('blur',floutterPhotosPrivees);
+function ajouterPriveMsg(m){
+  const el=document.getElementById('prive-msgs');
+  const moi=m.expediteur===CURRENT_USER.id;
+  const d=document.createElement('div');
+  d.style.cssText='margin-bottom:8px;text-align:'+(moi?'right':'left');
+  const texteAffiche=(!moi&&m.contenu_traduit)?m.contenu_traduit:m.contenu;
+  const badge=(!moi&&m.contenu_traduit)?' <span title="Original: '+m.contenu.replace(/"/g,'&quot;')+'" style="font-size:0.6rem;color:rgba(212,175,55,0.5);cursor:help">🌐</span>':'';
+  d.innerHTML='<span style="color:'+(moi?'#FFE9A8':'#D4AF37')+'">'+(moi?'Toi':m.expediteur_pse

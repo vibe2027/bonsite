@@ -1,0 +1,78 @@
+ÉNEMENTS
+// --
+function handleEventInterest(btn){
+  if(!CURRENT_USER){showError('⚠ Connecte-toi pour manifester ton intérêt.');openLogin();return;}
+  btn.textContent='✦ Intérêt enregistré !';btn.disabled=true;
+  showSuccess('✦ On te contactera pour cet événement !');
+}
+
+// --
+// ADMIN PANEL
+// --
+function showAdminPanel(){
+  const old=document.getElementById('admin-panel');if(old)old.remove();
+  const p=document.createElement('div');p.id='admin-panel';
+  p.innerHTML=`
+    <div style="font-size:0.55rem;letter-spacing:4px;color:#D4AF37;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;font-family:Share Tech Mono,monospace">
+      ✦ ADMIN PASCAL
+      <span style="cursor:pointer;opacity:0.4;font-size:1rem" onclick="document.getElementById('admin-panel').style.display='none'">✕</span>
+    </div>
+    <div id="admin-stats" style="font-size:0.48rem;color:rgba(255,255,255,0.7);letter-spacing:2px;margin-bottom:14px;line-height:2;font-family:Share Tech Mono,monospace">Chargement...</div>
+    <div style="display:grid;gap:6px">
+      <button onclick="adminLoad('inscriptions')" style="background:transparent;border:0.5px solid rgba(212,175,55,0.3);color:rgba(212,175,55,0.7);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">📋 500 BILLETS — INSCRIPTIONS</button>
+      <button onclick="adminLoad('signalements')" style="background:transparent;border:0.5px solid rgba(220,50,50,0.3);color:rgba(220,50,50,0.7);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">⚖ SIGNALEMENTS TRIBUNAL</button>
+      <button onclick="adminLoad('messages')" style="background:transparent;border:0.5px solid rgba(0,238,255,0.2);color:rgba(0,238,255,0.5);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">💬 MESSAGES SALON</button>
+      <button onclick="adminLoad('alertes')" style="background:transparent;border:0.5px solid rgba(255,80,80,0.2);color:rgba(255,80,80,0.5);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">🚨 ALERTES SOS</button>
+      <button onclick="adminLoad('profils')" style="background:transparent;border:0.5px solid rgba(212,175,55,0.3);color:rgba(212,175,55,0.7);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">🛡 PROFILS À VÉRIFIER</button>
+      <button onclick="adminLoad('acces')" style="background:transparent;border:0.5px solid rgba(180,79,255,0.35);color:rgba(180,79,255,0.8);padding:8px;font-size:0.48rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">🎁 ACCÈS & CO-FONDATEURS</button>
+      <button onclick="_supa.auth.signOut().then(()=>location.reload())" style="background:transparent;border:0.5px solid rgba(255,255,255,0.38);color:rgba(255,255,255,0.62);padding:6px;font-size:0.44rem;letter-spacing:2px;cursor:pointer;font-family:Share Tech Mono,monospace">DÉCONNEXION</button>
+    </div>
+    <div id="admin-data" style="margin-top:14px;font-size:0.48rem;color:rgba(255,255,255,0.68);line-height:1.9;max-height:280px;overflow-y:auto;font-family:Share Tech Mono,monospace"></div>
+  `;
+  document.body.appendChild(p);
+  adminLoadStats();
+}
+
+async function adminLoadStats(){
+  try{
+    const [ins,sig,msg,sos]=await Promise.all([
+      _supa.from('landing_inscriptions').select('id',{count:'exact',head:true}),
+      _supa.from('tribunal_signalements').select('id',{count:'exact',head:true}),
+      _supa.from('salon_messages').select('id',{count:'exact',head:true}),
+      _supa.from('ange_alerts').select('id',{count:'exact',head:true}),
+    ]);
+    const el=document.getElementById('admin-stats');
+    if(el)el.innerHTML=`Inscrits: <b style="color:#D4AF37">${ins.count||0}</b> / ${MAX_FOUNDERS} billets<br>Places restantes: <b style="color:#D4AF37">${MAX_FOUNDERS-(ins.count||0)}</b><br>Signalements: ${sig.count||0} · Messages: ${msg.count||0} · SOS: ${sos.count||0}`;
+  }catch(e){}
+}
+
+async function adminLoad(type){
+  const el=document.getElementById('admin-data');if(!el)return;
+  el.innerHTML='Chargement...';
+  try{
+    let data,html='';
+    if(type==='inscriptions'){
+      ({data}=await _supa.from('landing_inscriptions').select('prenom,email,ville,statut,created_at').order('created_at',{ascending:false}).limit(50));
+      html=`<div style="color:rgba(212,175,55,0.5);margin-bottom:8px">INSCRIPTIONS (${data?.length||0} affichées)</div>`+
+        (data||[]).map((r,i)=>`<div style="border-bottom:0.5px solid rgba(255,255,255,0.04);padding:6px 0"><span style="color:rgba(212,175,55,0.7)">#${i+1} ${r.prenom}</span> · ${r.email}<br><span style="opacity:.45">${r.ville||'N/A'} · ${r.statut} · ${new Date(r.created_at).toLocaleDateString('fr-CA')}</span></div>`).join('');
+    }else if(type==='signalements'){
+      ({data}=await _supa.from('tribunal_signalements').select('pseudo_reporter,motif,details,statut,created_at').order('created_at',{ascending:false}).limit(20));
+      html=`<div style="color:rgba(220,50,50,0.5);margin-bottom:8px">SIGNALEMENTS</div>`+(data||[]).map(r=>`<div style="border-bottom:0.5px solid rgba(255,255,255,0.04);padding:6px 0"><span style="color:rgba(220,50,50,0.7)">${escHtml(r.motif)}</span> par ${escHtml(r.pseudo_reporter)}<br><span style="opacity:.45">${escHtml(r.details||'')} · ${escHtml(r.statut)}</span></div>`).join('');
+    }else if(type==='messages'){
+      ({data}=await _supa.from('salon_messages').select('prenom,ville,message,created_at').order('created_at',{ascending:false}).limit(20));
+      html=`<div style="color:rgba(0,238,255,0.4);margin-bottom:8px">MESSAGES SALON</div>`+(data||[]).map(r=>`<div style="border-bottom:0.5px solid rgba(255,255,255,0.04);padding:6px 0"><span style="color:rgba(0,238,255,0.6)">${escHtml(r.prenom)}·${escHtml(r.ville||'QC')}</span>: ${escHtml(r.message)}</div>`).join('');
+    }else if(type==='alertes'){
+      ({data}=await _supa.from('ange_alerts').select('latitude,longitude,statut,notes,created_at').order('created_at',{ascending:false}).limit(20));
+      html=`<div style="color:rgba(255,80,80,0.5);margin-bottom:8px">ALERTES SOS</div>`+(data||[]).map(r=>`<div style="border-bottom:0.5px solid rgba(255,255,255,0.04);padding:6px 0"><span style="color:rgba(255,80,80,0.7)">GPS: ${r.latitude||'?'},${r.longitude||'?'}</span><br><span style="opacity:.45">${r.notes||''} · ${r.statut}</span></div>`).join('');
+    }else if(type==='profils'){
+      ({data}=await _supa.rpc('admin_profils_a_verifier'));
+      html=`<div style="color:rgba(212,175,55,0.5);margin-bottom:8px">PROFILS À VÉRIFIER (${data?.length||0})</div>`+
+        (data||[]).map(r=>`<div style="border-bottom:0.5px solid rgba(255,255,255,0.04);padding:8px 0;display:flex;align-items:center;gap:8px">`+
+          (r.photo?`<img src="${escHtml(r.photo)}" alt="Photo envoyée" style="width:40px;height:40px;object-fit:cover;border-radius:4px">`:'')+
+          `<div style="flex:1"><span style="color:rgba(212,175,55,0.7)">${r.nom}</span> · ${r.age||'?'} ans · ${r.ville||'N/A'}<br><span style="opacity:.45">${r.courriel||''} · ${new Date(r.cree_le).toLocaleDateString('fr-CA')}</span></div>`+
+          `<button onclick="adminVerifierPhoto('${r.id}',this)" style="background:transparent;border:0.5px solid rgba(212,175,55,0.5);color:#D4AF37;padding:4px 8px;font-size:0.44rem;letter-spacing:1px;cursor:pointer;font-family:Share Tech Mono,monospace">✓ VÉRIFIER</button>`+
+          `<button onclick="adminSuspendreProfil('${r.id}',this)" style="background:transparent;border:0.5px solid rgba(220,50,50,0.5);color:rgba(220,50,50,0.8);padding:4px 8px;font-size:0.44rem;letter-spacing:1px;cursor:pointer;font-family:Share Tech Mono,monospace">✕ SUSPECT</button>`+
+        `</div>`).join('');
+    }else if(type==='acces'){
+      html=`<div style="color:rgba(180,79,255,0.6);margin-bottom:10px">OFFRIR UN ACCÈS FONDATEUR GRATUIT</div>`+
+        `<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">`+

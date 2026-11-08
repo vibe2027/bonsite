@@ -1,0 +1,137 @@
+lor:rgba(212,175,55,0.7);letter-spacing:2px;font-family:Share Tech Mono,monospace"></div>
+      <button type="submit" class="trib-submit">Soumettre au tribunal ↗</button>
+    </form>
+
+  <div class="audience-wrap">
+    <div class="audience-title">// Salle d'audience · Vote la communauté</div>
+    <input type="text" id="aud-pseudo" class="aud-pseudo" maxlength="30" placeholder="Ton pseudo de juré (requis pour voter)">
+    <div id="audience-list"><div class="aud-empty">Chargement des dossiers...</div></div>
+  </div>
+  </div>
+</section>
+
+<!-- INSCRIPTION -->
+
+<section id="inscription">
+  <div class="form-wrap">
+    <h2 class="form-title">Rejoindre VIBE</h2>
+    <p class="form-sub">Choisis ton accès</p>
+    <div id="signup-success"></div>
+
+    <div class="plan-choice">
+      <button type="button" class="plan-card plan-free selected" id="planFree" onclick="choisirPlan('free')">
+        <div class="plan-tag">Membre Gratuit</div>
+        <div class="plan-price">0 $<span>pour toujours</span></div>
+        <div class="plan-desc">Commence sur le web · Salon · Profil · Communauté</div>
+        <div class="plan-check">✓ Choisi</div>
+      </button>
+      <button type="button" class="plan-card plan-founder" id="planFounder" onclick="choisirPlan('founder')">
+        <div class="plan-tag">✦ Pionnier</div>
+        <div class="plan-price">99 $<span>CAD/an</span></div>
+        <div class="plan-desc">Accès complet · Édition limitée · 500 places</div>
+        <div class="plan-check">✓ Choisi</div>
+      </button>
+    </div>
+
+    <form id="signup-form" onsubmit="handleSignup(event)">
+      <input type="hidden" id="plan-choisi" value="free">
+      <div class="fbadge" id="founder-badge" style="display:none">
+        <div class="fb-l">✦ Pass Pionnier</div>
+        <div class="fb-p">99 $<span style="font-size:0.9rem;color:rgba(212,175,55,0.45)">CAD</span></div>
+        <div class="fb-s">par année · Accès complet · Renouvelable</div>
+        <div class="fb-r" id="form-spots">... places restantes</div>
+      </div>
+      <p class="form-sub" style="margin:-6px 0 18px">Commence gratuitement sur la web app. Active le Pass Pionnier ensuite si tu veux tout débloquer.</p>
+      <div class="form-group">
+        <label class="form-label">Prénom</label>
+        <input id="prenom" class="form-field" type="text" placeholder="Ton prénom" required maxlength="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Courriel</label>
+        <input id="email" class="form-field" type="email" placeholder="ton@courriel.ca" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <input id="mdp" class="form-field" type="password" placeholder="Min. 8 car. · 1 majuscule · 1 chiffre" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ville</label>
+        <select id="ville" class="form-field">
+          <option value="">Ta ville...</option>
+          <option>Québec</option><option>Montréal</option><option>Toronto</option>
+          <option>Vancouver</option><option>Ottawa</option><option>Calgary</option><option>Autre</option>
+        </select>
+      </div>
+      <input id="hp-field" type="text" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="cgu-row">
+        <input type="checkbox" id="age18" required>
+        <label for="age18">Je confirme avoir <b style="color:#D4AF37;font-weight:400">18 ans ou plus</b></label>
+      </div>
+      <div class="cgu-row">
+        <input type="checkbox" id="cgu" required>
+        <label for="cgu">J'accepte les <a href="/conditions.html" target="_blank">conditions d'utilisation</a> et la <a href="/confidentialite.html" target="_blank">politique de confidentialité</a> (Loi 25 · LPRPDE)</label>
+      </div>
+      <button type="submit" class="btn-submit" id="submit-btn"><span id="submit-label">Créer mon compte gratuit</span></button>
+      <p class="form-note">Inscription web immédiate · Paiement sécurisé si tu passes Pionnier · Aucune donnée vendue · Loi 25 conforme</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">VIBE</div>
+  <div style="font-size:0.5rem;letter-spacing:3px;color:rgba(212,175,55,0.6);margin:6px 0 10px;font-family:Share Tech Mono,monospace">RÉSERVÉ AUX 18 ANS ET PLUS</div>
+  <div class="footer-links">
+    <a href="/confidentialite.html">Confidentialité</a>
+    <a href="/conditions.html">Conditions</a>
+    <a href="/paiement.html">Paiement</a>
+    <a href="/contact.html">Contact</a>
+    <a href="#ange-section">Mode Ange</a>
+    <a href="#salon-section">Salon</a>
+    <a href="#tribunal-section">Tribunal</a>
+  </div>
+  <div class="footer-copy">© 2026 VIBE · Québec, Canada · Tous droits réservés · vibegay.ca</div>
+  <div style="font-size:0.46rem;letter-spacing:2px;color:rgba(255,255,255,0.55);margin-top:12px;line-height:1.8;font-family:Share Tech Mono,monospace;text-transform:uppercase">Commence aujourd'hui sur la web app · reçois la transition prioritaire quand les apps natives arrivent</div>
+  <div style="display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+    <div style="border:1px solid rgba(212,175,55,0.35);border-radius:6px;padding:8px 14px;display:flex;align-items:center;gap:8px;opacity:0.85;cursor:default" title="Transition native en préparation">
+      <span style="font-size:1.1rem"></span>
+      <div style="text-align:left;line-height:1.2">
+        <div style="font-size:0.32rem;letter-spacing:1px;color:rgba(255,255,255,0.5);font-family:Share Tech Mono,monospace">WEB MAINTENANT · NATIF ENSUITE</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.85);font-family:Share Tech Mono,monospace">App Store en préparation</div>
+      </div>
+    </div>
+    <div style="border:1px solid rgba(212,175,55,0.35);border-radius:6px;padding:8px 14px;display:flex;align-items:center;gap:8px;opacity:0.85;cursor:default" title="Transition native en préparation">
+      <span style="font-size:1.1rem">▶</span>
+      <div style="text-align:left;line-height:1.2">
+        <div style="font-size:0.32rem;letter-spacing:1px;color:rgba(255,255,255,0.5);font-family:Share Tech Mono,monospace">WEB MAINTENANT · NATIF ENSUITE</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.85);font-family:Share Tech Mono,monospace">Google Play en préparation</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL CONNEXION -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal-box">
+    <div class="modal-scan"></div>
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <div class="modal-title">Connexion</div>
+    <div class="modal-sub">// Accès au réseau VIBE //</div>
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">Courriel</label>
+        <input class="form-field" type="email" id="login-email" placeholder="ton@courriel.ca" required>
+      </div>
+      <div class="form-group" style="margin-top:10px">
+        <label class="form-label">Mot de passe</label>
+        <input class="form-field" type="password" id="login-mdp" placeholder="••••••••" required>
+      </div>
+      <button class="submit-btn" type="submit"><span>Entrer dans VIBE ✦</span></button>
+    </form>
+    <div style="margin-top:10px;text-align:center">
+      <a href="#" onclick="handleMagicLink();return false;" style="color:rgba(180,79,255,0.7);text-decoration:none;font-size:0.5rem;letter-spacing:2px;font-family:Share Tech Mono,monospace">✉ Recevoir un lien de connexion (sans mot de passe)</a>
+    </div>
+    <div style="margin-top:14px;text-align:center;font-size:.5rem;color:rgba(255,255,255,.18);letter-spacing:2px;font-family:Share Tech Mono,monospace">
+      Pas encore membre ? <a href="#inscription" onclick="closeLogin()" style="color:rgba(212,175,55,.45);text-decoration:none">S'inscrire →</a>
+    </div>
+    <div style="m

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index,follow">
+<title>Contactez-nous — VIBE · vibegay.ca</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050508;color:rgba(255,255,255,0.82);font-family:'Share Tech Mono',monospace;line-height:1.8;font-size:0.9rem;letter-spacing:0.5px}
+.wrap{max-width:600px;margin:0 auto;padding:60px 26px 90px}
+a{color:#D4AF37;text-decoration:none}a:hover{text-decoration:underline}
+h1{font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;margin-bottom:10px;line-height:1.2}
+.meta{font-size:0.65rem;color:rgba(212,175,55,0.8);letter-spacing:3px;margin-bottom:40px;text-transform:uppercase}
+p{margin-bottom:16px;color:rgba(255,255,255,0.75)}
+.back{display:inline-block;margin-bottom:30px;font-size:0.7rem;letter-spacing:2px;text-decoration:none;color:#D4AF37}
+form{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.3);padding:30px;border-radius:4px}
+.form-group{margin-bottom:20px}
+label{display:block;font-weight:bold;color:#D4AF37;margin-bottom:8px;font-size:0.8rem;letter-spacing:1px;text-transform:uppercase}
+input,textarea{width:100%;padding:12px;background:rgba(0,0,0,0.4);border:1px solid rgba(212,175,55,0.4);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.9rem;border-radius:3px}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.4)}
+input:focus,textarea:focus{outline:none;border-color:#D4AF37;box-shadow:0 0 10px rgba(212,175,55,0.2)}
+textarea{resize:vertical;min-height:120px}
+button{width:100%;padding:14px;background:#D4AF37;color:#000;border:none;font-weight:bold;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:0.9rem;letter-spacing:1px;text-transform:uppercase;border-radius:3px;transition:all 0.3s}
+button:hover{background:#e6c547;transform:translateY(-2px)}
+button:active{transform:translateY(0)}
+.message{padding:15px;border-radius:3px;margin-top:20px;font-size:0.85rem;display:none}
+.message.success{background:rgba(76,175,80,0.2);border-left:3px solid #4CAF50;color:#81C784;display:block}
+.message.error{background:rgba(244,67,54,0.2);border-left:3px solid #f44336;color:#ef5350;display:block}
+.info{background:rgba(212,175,55,0.1);border-left:3px solid #D4AF37;padding:15px;margin:20px 0;font-size:0.85rem;color:rgba(255,255,255,0.8)}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/">← Retour à vibegay.ca</a>
+<h1>Contactez-nous</h1>
+<div class="meta">VIBE · SUPPORT · VIBEGAY.CA</div>
+
+<p>Vous avez une question, une suggestion, ou rencontrez un problème ? Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.</p>
+
+<div class="info">
+  📧 <strong>Email direct :</strong> support@vibegay.ca
+</div>
+
+<form id="contactForm">
+  <div class="form-group">
+    <label for="name">Nom ou pseudonyme *</label>
+    <input type="text" id="name" name="name" required placeholder="Votre nom">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Adresse email *</label>
+    <input type="email" id="email" name="email" required placeholder="votre@email.com">
+  </div>
+
+  <div class="form-group">
+    <label for="subject">Sujet *</label>
+    <input type="text" id="subject" name="subject" required placeholder="Sujet de votre message">
+  </div>
+
+  <div class="form-group">
+    <label for="message">Message *</label>
+    <textarea id="message" name="message" required placeholder="Écrivez votre message ici..."></textarea>
+  </div>
+
+  <button type="submit">Envoyer le message</button>
+
+  <div id="responseMessage" class="message"></div>
+</form>
+
+<hr style="border:none;border-top:1px solid rgba(212,175,55,0.3);margin:40px 0">
+
+<h2 style="font-size:1.2rem;margin-bottom:15px">Informations de contact</h2>
+<p><strong>Email :</strong> support@vibegay.ca</p>
+<p><strong>Plateforme :</strong> Vibegay.ca (NEQ 2282352097)</p>
+<p><strong>Localisation :</strong> Québec, Canada</p>
+<p style="margin-top:20px;font-size:0.85rem;color:rgba(255,255,255,0.6)">Temps de réponse : généralement 24-48 heures</p>
+
+</div>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const message = document.getElementById('responseMessage');
+  const button = form.querySelector('button');
+
+  const formData = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    subject: document.getElementById('subject').value,
+    message: document.getElementById('message').value
+  };
+
+  // Validation côté client
+  if (formData.message.length < 10) {
+    showMessage('Le message doit avoir au moins 10 caractères', 'error');
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = '⏳ Envoi...';
+
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      showMessage('✅ ' + data.message, 'success');
+      form.reset();
+      button.textContent = 'Message envoyé !';
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = 'Envoyer le message';
+      }, 3000);
+    } else {
+      showMessage('❌ ' + (data.error || 'Erreur lors de l\'envoi'), 'error');
+      showMailtoFallback(formData);
+      button.disabled = false;
+      button.textContent = 'Envoyer le message';
+    }
+  } catch (err) {
+    console.error('Erreur:', err);
+    showMessage('❌ Erreur réseau. Veuillez réessayer.', 'error');
+    showMailtoFallback(formData);
+    button.disabled = false;
+    button.textContent = 'Envoyer le message';
+  }
+});
+
+function showMessage(text, type) {
+  const message = document.getElementById('responseMessage');
+  message.textContent = text;
+  message.className = 'message ' + type;
+  message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Si l'envoi automatique échoue, proposer l'envoi direct par courriel
+// avec le message déjà rempli, pour qu'aucun message ne soit perdu.
+function showMailtoFallback(formData) {
+  const message = document.getElementById('responseMessage');
+
+  const corps =
+    'De : ' + formData.name + '\n' +
+    'Courriel : ' + formData.email + '\n\n' +
+    formData.message;
+
+  const lien = document.createElement('a');
+  lien.href = 'mailto:support@vibegay.ca'
+    + '?subject=' + encodeURIComponent('[Contact] ' + formData.subject)
+    + '&body=' + encodeURIComponent(corps);
+  lien.textContent = '📧 Envoyer directement par courriel';
+  lien.style.cssText = 'display:inline-block;margin-top:12px;color:#D4AF37;font-weight:600';
+
+  message.appendChild(document.createElement('br'));
+  message.appendChild(lien);
+}
+</script>
+</body>
+</html>

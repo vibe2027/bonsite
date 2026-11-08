@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="VIBE — L'app de rencontre LGBTQ+ plus sûre : audio d'abord, Mode Ange, web app immédiate.">
+<meta property="og:title" content="VIBE — Rencontre LGBTQ+ plus sûre">
+<meta property="og:description" content="Teste VIBE d'abord en audio : une rencontre LGBTQ+ plus sûre, née à Québec.">
+<meta property="og:image" content="https://vibegay.ca/bg.png">
+<meta property="og:url" content="https://vibegay.ca">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VIBE — Rencontre LGBTQ+ plus sûre">
+<meta name="twitter:description" content="Teste VIBE d'abord en audio : une rencontre LGBTQ+ plus sûre, née à Québec.">
+<meta name="twitter:image" content="https://vibegay.ca/bg.png">
+<title>VIBE — Rencontre LGBTQ+ plus sûre</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VIBE">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#D4AF37;--gold2:rgba(212,175,55,0.12);
+  --purple:#b44fff;--cyan:#00eeff;--red:#ff3333;
+  --matrix-gold:rgba(212,175,55,0.08);
+  --bg:#000;--text:rgba(255,255,255,0.8);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:113%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Share Tech Mono',monospace;
+  overflow-x:hidden;cursor:crosshair;
+}
+
+/* -- INTRO SCREEN -- */
+#intro{
+  position:fixed;inset:0;z-index:9999;
+  background:#000;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity 1.8s ease;
+}
+#intro.fade-out{opacity:0;pointer-events:none}
+#intro-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.intro-terminal{
+  position:relative;z-index:10;
+  width:min(540px,90vw);
+  padding:0 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.intro-line{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.75rem,2.5vw,1rem);
+  letter-spacing:4px;
+  color:rgba(212,175,55,0.85);
+  margin-bottom:16px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-align:center;
+  border-right:2px solid rgba(212,175,55,0.7);
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+.intro-line.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.intro-line.done{
+  border-right-color:transparent;
+}
+.intro-line.dim{color:rgba(212,175,55,0.4);font-size:clamp(0.6rem,2vw,0.75rem);letter-spacing:5px}
+.intro-line.bright{
+  color:#fff;
+  font-size:clamp(0.9rem,3vw,1.2rem);
+  letter-spacing:8px;
+  text-shadow:0 0 30px rgba(212,175,55,0.6);
+}
+.intro-cursor{
+  display:inline-block;width:2px;height:1em;
+  background:rgba(212,175,55,0.8);
+  vertical-align:middle;margin-left:4px;
+  animation:cur-blink 0.7s ease-in-out infinite;
+}
+@keyframes sound-pulse{0%,100%{border-color:rgba(212,175,55,0.7);color:rgba(212,175,55,0.5)}50%{border-color:rgba(212,175,55,0.8);color:rgba(212,175,55,0.9);box-shadow:0 0 15px rgba(212,175,55,0.2)}}
+
+.intro-progress{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  width:min(240px,70vw);height:1px;
+  background:rgba(212,175,55,0.08);overflow:hidden;
+}
+.intro-bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,rgba(212,175,55,0.3),rgba(212,175,55,0.8));
+  transition:width 0.1s linear;
+}
+.intro-skip{
+  position:absolute;bottom:18px;right:20px;z-index:20;
+  font-size:0.42rem;letter-spacing:3px;color:rgba(255,255,255,0.48);
+  cursor:pointer;text-transform:uppercase;
+  background:transparent;border:none;
+  font-family:'Share Tech Mono',monospace;transition:color 0.3s;
+}
+.intro-skip:hover{color:rgba(255,255,255,0.4)}
+
+/* -- CANVAS LAYERS -- */
+#universe-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+/* -- HUD -- */
+.hud{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 20px;
+  background:rgba(0,0,0,0.9);
+  border-bottom:0.5px solid rgba(212,175,55,0.15);
+  backdrop-filter:blur(20px);
+}
+.hud-brand{
+  font-family:'Playfair Display',serif;
+  font-size:0.85rem;letter-spacing:8px;color:var(--gold);font-weight:700;
+  text-shadow:0 0 20px rgba(212,175,55,0.3);
+}
+.hud-brand span{font-size:0.4rem;letter-spacing:4px;color:rgba(212,175,55,0.4);display:block;margin-top:2px}
+.hud-nav{display:flex;gap:20px}
+.hud-nav a{
+  font-size:0.44rem;letter-spacing:3px;color:rgba(212,175,55,0.72);
+  text-decoration:none;text-transform:uppercase;transition:all 0.3s;
+  position:relative;
+}
+.hud-nav a::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:0.5px;
+  background:var(--gold);transition:width 0.3s;
+}
+.hud-nav a:hover{color:var(--gold)}
+.hud-nav a:hover::after{width:100%}
+.hud-right{display:flex;align-items:center;gap:14px}
+.hud-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:0.42rem;letter-spacing:3px;color:rgba(212,175,55,0.72);
+}
+.pulse-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:blink 1.3s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 6px rgba(212,175,55,0.8)}50%{opacity:.15;box-shadow:none}}
+.hud-connexion{
+  font-size:0.44rem;letter-spacing:3px;color:rgba(212,175,55,0.6);
+  border:0.5px solid rgba(212,175,55,0.25);padding:6px 14px;
+  cursor:pointer;text-transform:uppercase;transition:all 0.3s;background:transparent;
+  font-family:'Share Tech Mono',monospace;
+}
+.hud-connexion:hover{color:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(212,175,55,0.15)}
+@media(max-width:700px){.hud-nav{display:none}.hud-brand span{display:none}}
+
+/* -- DONNÉES LIVE HUD SECONDAIRE -- */
+.live-hud{
+  position:fixed;top:52px;left:0;right:0;z-index:999;
+  display:flex;gap:0;overflow:hidden;
+  border-bottom:0.5px solid rgba(212,175,55,0.06);
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);
+}
+.lhud-item{
+  flex:1;padding:5px 12px;text-align:center;
+  border-right:0.5px solid rgba(212,175,55,0.06);
+  font-size:0.4rem;letter-spacing:2px;
+}
+.lhud-item:last-child{border-right:none}
+.lhud-val{color:var(--gold);font-weight:700;display:block;font-size:0.55rem}
+.lhud-lbl{color:rgba(255,255,255,0.48);text-transform:uppercase}
+@media(max-width:500px){.lhud-item:nth-child(n+4){display:none}}
+
+/* -- HERO -- */
+#accueil{
+  position:relative;z-index:10;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:100px 24px 60px;
+}
+.hero-scan{
+  display:none;
+}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:0.3}100%{top:100vh;opacity:0}}
+
+/* LOGO ORBITAL */
+.logo-system{
+  position:relative;width:220px;height:220px;
+  margin:0 auto 40px;
+}
+.orbit-ring{
+  position:absolute;border-radius:50%;border:1px solid;
+  animation:orbit-spin linear infinite;
+}
+.orbit-ring.r1{
+  inset:-20px;
+  border-color:rgba(212,175,55,0.72);
+  animation-duration:15s;
+  box-shadow:0 0 12px rgba(212,175,55,0.12),0 0 0 0.5px rgba(212,175,55,0.08) inset;
+}
+.orbit-ring.r2{
+  inset:-38px;
+  border-color:rgba(180,79,255,0.22);
+  animation-duration:25s;anima

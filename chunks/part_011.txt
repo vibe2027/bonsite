@@ -1,0 +1,187 @@
+    grad.addColorStop(0.5,`hsla(${p.hue},70%,55%,${0.15*p.depth})`);
+      grad.addColorStop(1,'transparent');
+    } else {
+      grad.addColorStop(0,`hsla(${p.hue},70%,60%,${0.25*p.depth})`);
+      grad.addColorStop(1,'transparent');
+    }
+    sCtx.beginPath();sCtx.arc(p.x,p.y,glow*1.8,0,Math.PI*2);
+    sCtx.save();
+    sCtx.shadowBlur=p.speaking?28*p.depth:14*p.depth;
+    sCtx.shadowColor=p.ghost?`rgba(180,79,255,${0.5*p.depth})`:`hsla(${p.hue},80%,65%,${0.6*p.depth})`;
+    sCtx.fillStyle=grad;sCtx.fill();
+    sCtx.restore();
+
+    // Cercle
+    sCtx.beginPath();sCtx.arc(p.x,p.y,r,0,Math.PI*2);
+    sCtx.strokeStyle=p.ghost?`rgba(180,79,255,${0.5*p.depth})`:`hsla(${p.hue},75%,65%,${0.7*p.depth})`;
+    sCtx.lineWidth=p.speaking?2:1.2;sCtx.stroke();
+
+    // Fond cercle
+    const fill=sCtx.createRadialGradient(p.x,p.y-r*0.2,0,p.x,p.y,r);
+    fill.addColorStop(0,p.ghost?`rgba(180,79,255,${0.15*p.depth})`:`hsla(${p.hue},50%,20%,${0.3*p.depth})`);
+    fill.addColorStop(1,`rgba(0,0,0,${0.3*p.depth})`);
+    sCtx.beginPath();sCtx.arc(p.x,p.y,r,0,Math.PI*2);
+    sCtx.fillStyle=fill;sCtx.fill();
+
+    // Emoji
+    sCtx.font=`${r*0.9}px Arial`;sCtx.textAlign='center';sCtx.textBaseline='middle';
+    sCtx.globalAlpha=p.ghost?0.3*p.depth:0.85*p.depth;
+    sCtx.fillText(p.humeur,p.x,p.y);sCtx.globalAlpha=1;
+
+    // Nom + ville
+    if(!p.ghost&&p.depth>0.7){
+      sCtx.font=`${10*p.depth}px Share Tech Mono,monospace`;
+      sCtx.fillStyle=`rgba(255,255,255,${0.55*p.depth})`;
+      sCtx.textAlign='center';sCtx.textBaseline='top';
+      sCtx.fillText(`${p.prenom}·${p.ville}`,p.x,p.y+r+4*p.depth);
+    }
+
+    // Onde message
+    if(p.speaking){
+      for(let w=1;w<=3;w++){
+        const wr=r+w*12+Math.sin(p.pulse*2+w)*3;
+        const wop=(1-w/4)*0.3*p.depth;
+        sCtx.beginPath();sCtx.arc(p.x,p.y,wr,0,Math.PI*2);
+        sCtx.strokeStyle=`hsla(${p.hue},80%,70%,${wop})`;
+        sCtx.lineWidth=0.8;sCtx.stroke();
+      }
+    }
+  });
+
+  requestAnimationFrame(drawSalon);
+}
+
+setTimeout(()=>{resizeSalon();initSalon();requestAnimationFrame(drawSalon)},200);
+window.addEventListener('resize',()=>{resizeSalon();initSalon()});
+
+// --
+// MUSIQUE D'AMBIANCE — vrais fichiers audio, style au choix
+// --
+// IMPORTANT: les 'src' sont vides — il manque les fichiers audio réels.
+// VIBE doit fournir des URL publiques (ou des fichiers à héberger dans /audio/)
+// pour chaque style avant que la lecture fonctionne.
+const MUSIC_STYLES={
+  ambient:{nom:'Nuit de Québec',artiste:'VIBE Ambient · Salon Flottant',src:''},
+  synthwave:{nom:'Néon Nocturne',artiste:'VIBE Synthwave · Late Night',src:''},
+  lounge:{nom:'Salon Feutré',artiste:'VIBE Lounge · Chill',src:''},
+  pride:{nom:'Lumière de la Fierté',artiste:'VIBE Pride · Anthems',src:''},
+  lofi:{nom:'Heures Tranquilles',artiste:'VIBE Lo-Fi · Focus',src:''},
+  afrolatin:{nom:'Chaleur Tropicale',artiste:'VIBE Afro-Latin · Groove',src:''},
+  deephouse:{nom:'Pulsation',artiste:'VIBE Deep House · Club',src:''},
+  rnb:{nom:'Velours',artiste:'VIBE R&B · Late Night',src:''},
+  popfr:{nom:'Chanson d\'Ici',artiste:'VIBE Pop Francophone',src:''},
+  hiphop:{nom:'Rue Principale',artiste:'VIBE Hip-Hop · Urbain',src:''},
+};
+const bgAudio=document.getElementById('bg-audio');
+let musicStyle=localStorage.getItem('vibe_music_style')||'ambient';
+
+function majMusicUI(){
+  const s=MUSIC_STYLES[musicStyle];
+  document.getElementById('np-track').textContent=s.nom;
+  document.getElementById('np-artist').textContent=s.artiste;
+  document.querySelectorAll('#music-styles button').forEach(b=>{
+    const on=b.dataset.style===musicStyle;
+    b.style.background=on?'rgba(212,175,55,0.9)':'transparent';
+    b.style.color=on?'#000':'rgba(255,255,255,0.7)';
+  });
+  document.getElementById('eq-bars').classList.toggle('playing',!bgAudio.paused);
+}
+function rendreStylesMusique(){
+  const box=document.getElementById('music-styles');if(!box)return;
+  box.innerHTML=Object.entries(MUSIC_STYLES).map(([k,v])=>
+    '<button type="button" data-style="'+k+'" onclick="event.stopPropagation();choisirStyleMusique(\''+k+'\')" style="background:transparent;border:1px solid rgba(212,175,55,0.4);color:rgba(255,255,255,0.7);padding:6px 10px;font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;cursor:pointer">'+v.nom+'</button>').join('');
+}
+function choisirStyleMusique(k){
+  musicStyle=k;
+  localStorage.setItem('vibe_music_style',k);
+  const s=MUSIC_STYLES[k];
+  const jouait=!bgAudio.paused;
+  if(!s.src){majMusicUI();showError('⚠ Fichier audio pas encore ajouté pour ce style.');return;}
+  bgAudio.src=s.src;
+  if(jouait)bgAudio.play().catch(()=>{});
+  majMusicUI();
+}
+function toggleMusique(){
+  const s=MUSIC_STYLES[musicStyle];
+  if(!s.src){showError('⚠ Fichier audio pas encore ajouté pour ce style.');return;}
+  if(bgAudio.paused){
+    if(!bgAudio.src)bgAudio.src=s.src;
+    bgAudio.play().then(majMusicUI).catch(()=>{
+      showError('⚠ Le navigateur bloque la lecture auto. Retape sur ▶.');
+    });
+  }else{
+    bgAudio.pause();
+    majMusicUI();
+  }
+}
+bgAudio.addEventListener('play',majMusicUI);
+bgAudio.addEventListener('pause',majMusicUI);
+rendreStylesMusique();
+majMusicUI();
+
+// --
+// CHAT SALON SUPABASE REALTIME — 3 salons distincts
+// --
+const SEED_PAR_SALON={
+  flottant:[
+    {prenom:'Alex',ville:'QC',message:'Ce salon me fait sentir libre ✦',mode:'normal'},
+    {prenom:'Jordan',ville:'MTL',message:'La musique ce soir 🎵',mode:'normal'},
+  ],
+  voix:[
+    {prenom:'Sam',ville:'YVR',message:'Quelqu\'un pour un appel vocal ce soir ?',mode:'normal'},
+  ],
+  fantomes:[
+    {prenom:'👻',ville:'',message:'Je suis là mais vous ne me voyez pas...',mode:'fantome'},
+  ],
+};
+let currentSalon='flottant';
+let chatMsgs=[...SEED_PAR_SALON[currentSalon]];
+let salonRtChan=null;
+
+function renderChat(){
+  const el=document.getElementById('live-chat-msgs');if(!el)return;
+  el.innerHTML=chatMsgs.slice(-6).map(m=>{
+    const isGhost=m.mode==='fantome';
+    const cls=isGhost?'cn-ghost':m.prenom==='VIBE'?'cn-cyan':'cn-gold';
+    const name=isGhost?'👻 Fantôme':`${escHtml(m.prenom)}${m.ville?'·'+escHtml(m.ville):''}`;
+    const clickable=!isGhost&&m.expediteur&&(!CURRENT_USER||m.expediteur!==CURRENT_USER.id);
+    const attr=clickable?` onclick="ouvrirPrive('${m.expediteur}','${escHtml((m.prenom||'Membre').replace(/'/g,''))}')" style="cursor:pointer;text-decoration:underline dotted rgba(212,175,55,0.4)" title="Message privé"`:'';
+    return `<div class="chat-msg"><span class="${cls}"${attr}>${name}</span><span class="ct">${escHtml(m.message)}</span></div>`;
+  }).join('');
+  el.scrollTop=el.scrollHeight;
+}
+renderChat();
+
+async function loadChatMsgs(){
+  try{
+    const {data}=await _supa.from('salon_messages').select('*').eq('salon',currentSalon).order('created_at',{ascending:false}).limit(20);
+    chatMsgs=data?.length?[...SEED_PAR_SALON[currentSalon],...data.reverse()]:[...SEED_PAR_SALON[currentSalon]];
+    renderChat();
+  }catch(e){}
+}
+
+function subscribeChat(){
+  if(salonRtChan)_supa.removeChannel(salonRtChan);
+  salonRtChan=_supa.channel('salon_rt_'+currentSalon)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'salon_messages',filter:'salon=eq.'+currentSalon},p=>{
+      chatMsgs.push(p.new);
+      if(chatMsgs.length>60)chatMsgs.shift();
+      renderChat();
+      // Faire parler un profil aléatoire
+      if(salProfs.length){
+        const rp=salProfs[Math.floor(Math.random()*salProfs.length)];
+        rp.speaking=true;rp.speakTimer=120;
+      }
+    }).subscribe();
+}
+
+const SALON_COLORS={flottant:'#D4AF37',voix:'#D4AF37',fantomes:'rgba(180,180,255,0.85)'};
+function entrerSalon(nom,cardEl){
+  document.querySelectorAll('.salon-card').forEach(c=>{
+    const actif=c.dataset.salon===nom;
+    c.style.borderColor=actif?(SALON_COLORS[c.dataset.salon]||'#D4AF37'):'rgba(255,255,255,0.15)';
+    c.style.background=actif?'rgba(212,175,55,0.12)':'rgba(255,255,255,0.02)';
+  });
+  switchSalon(nom);
+  // Initialiser le salon temps réel si l'utilisateur est connecté
+  if(window.salonUI && window.CURRE

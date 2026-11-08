@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="VIBE — L'app de rencontre LGBTQ+ plus sûre : audio d'abord, Mode Ange, web app immédiate.">
+<meta property="og:title" content="VIBE — Rencontre LGBTQ+ plus sûre">
+<meta property="og:description" content="Teste VIBE d'abord en audio : une rencontre LGBTQ+ plus sûre, née à Québec.">
+<meta property="og:image" content="https://vibegay.ca/bg.png">
+<meta property="og:url" content="https://vibegay.ca">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VIBE — Rencontre LGBTQ+ plus sûre">
+<meta name="twitter:description" content="Teste VIBE d'abord en audio : une rencontre LGBTQ+ plus sûre, née à Québec.">
+<meta name="twitter:image" content="https://vibegay.ca/bg.png">
+<title>VIBE — Rencontre LGBTQ+ plus sûre</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VIBE">
+<script src="https://cdn.jsdelivr.net

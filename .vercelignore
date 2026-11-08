@@ -1,0 +1,45 @@
+# Vercel Build Ignore - Exclude non-production files
+
+# Test & Validation Scripts
+scripts/pre-deployment-check.js
+scripts/
+
+# Documentation for deployment (not needed in prod build)
+DEPLOYMENT-PLAN-PHASE-6.md
+INTEGRATION-GUIDE-PHASE-6.md
+OPERATIONS-MANUAL.md
+CERTIFICAT-FONDATEUR-COMPLET.html
+CERTIFICAT-FONDATEUR-COMPLET.pdf
+LETTRE-BIENVENUE-MARC-REID.md
+LETTRE-BIENVENUE-MARC-REID.pdf
+
+# Development & Test Files
+test-stripe-integration.js
+test-*.js
+*.test.js
+*.spec.js
+jest.config.js
+
+# Environment & Config (local)
+.env.test
+.env.local
+.env.*.local
+
+# Git & Version Control
+.git
+.gitignore
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Build Artifacts (local dev only)
+.next/
+.cache/

@@ -1,0 +1,99 @@
+music-styles" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>
+    <audio id="bg-audio" loop preload="none"></audio>
+  </div>
+
+  <div class="salon-chatbox" id="salon-chatbox" style="border:0.5px solid rgba(255,255,255,0.1);padding:14px;background:rgba(255,255,255,0.02)">
+    <div id="salon-actif-label" style="font-family:Share Tech Mono,monospace;font-size:0.46rem;letter-spacing:2px;color:#D4AF37;font-weight:700;margin-bottom:10px">🌊 SALON FLOTTANT</div>
+    <div id="live-chat-msgs"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <input type="text" id="chat-input" class="chat-input" maxlength="200" placeholder="Écris dans le salon..." style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChatMsg();}">
+      <button type="button" onclick="sendChatMsg()" style="background:#D4AF37;border:none;color:#000;padding:0 16px;font-family:Share Tech Mono,monospace;font-weight:700;cursor:pointer">↗</button>
+    </div>
+  </div>
+
+  <div class="salon-chat">
+    <div class="chat-head">// Découverte — Rien de public ici. Trouve quelqu'un, parlez juste entre vous.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px;align-items:center">
+      <button onclick="ouvrirMonProfil()" style="background:#D4AF37;color:#000;border:none;padding:10px 16px;font-family:Share Tech Mono,monospace;font-size:0.52rem;letter-spacing:2px;cursor:pointer;font-weight:700">✦ MON PROFIL</button>
+      <input type="text" id="dec-ville" placeholder="Ville..." style="background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.18);color:#fff;padding:10px 12px;font-family:Share Tech Mono,monospace;font-size:0.52rem;letter-spacing:1px;width:110px" onkeydown="if(event.key==='Enter')chargerDecouverte()">
+      <div id="dec-intentions" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <div id="dec-identites" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+    <div id="annuaire-membres" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:4px 0;min-height:80px"></div>
+  </div>
+</section>
+
+<!-- BOUTIQUE -->
+<section id="boutique-section">
+  <div class="salon-header">
+    <p class="section-tag">// Extras · Achat unique</p>
+    <h2 class="section-title">Un p'tit <em>boost</em>,<br>quand t'en as besoin.</h2>
+    <p class="section-body">Rien d'obligatoire — juste des coups de pouce ponctuels, activables en un clic.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:20px">
+    <div style="border:1px solid rgba(0,238,255,0.35);background:rgba(0,238,255,0.05);padding:18px 14px;text-align:center">
+      <div style="font-size:1.6rem;margin-bottom:6px">🚀</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:#00EEFF;font-weight:700">BOOST 24H</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin:6px 0 12px">En tête de la découverte pendant 24h</div>
+      <button onclick="acheterExtra('boost')" style="background:#00EEFF;color:#000;border:none;padding:8px 16px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:2px;font-weight:700;cursor:pointer">ACHETER</button>
+    </div>
+    <div style="border:1px solid rgba(180,180,255,0.35);background:rgba(180,180,255,0.05);padding:18px 14px;text-align:center">
+      <div style="font-size:1.6rem;margin-bottom:6px">👻</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:rgba(180,180,255,0.9);font-weight:700">MODE FANTÔME 7 JOURS</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin:6px 0 12px">Invisible dans Découverte pendant 7 jours</div>
+      <button onclick="acheterExtra('fantome')" style="background:rgba(180,180,255,0.9);color:#000;border:none;padding:8px 16px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:2px;font-weight:700;cursor:pointer">ACHETER</button>
+    </div>
+    <div style="border:1px solid rgba(212,175,55,0.35);background:rgba(212,175,55,0.05);padding:18px 14px;text-align:center">
+      <div style="font-size:1.6rem;margin-bottom:6px">👁</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.56rem;letter-spacing:2px;color:#D4AF37;font-weight:700">QUI M'A CONSULTÉ</div>
+      <div style="font-family:Share Tech Mono,monospace;font-size:0.42rem;letter-spacing:1px;color:rgba(255,255,255,0.5);margin:6px 0 12px">Vois la liste pendant 7 jours</div>
+      <button onclick="acheterExtra('visites')" style="background:#D4AF37;color:#000;border:none;padding:8px 16px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:2px;font-weight:700;cursor:pointer">ACHETER</button>
+      <div style="margin-top:8px"><a href="#" onclick="voirMesVisites();return false" style="color:rgba(212,175,55,0.6);font-family:Share Tech Mono,monospace;font-size:0.4rem;letter-spacing:1px;text-decoration:underline">Voir mes visites →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRIBUNAL -->
+<section id="tribunal-section">
+  <div class="tribunal-header">
+    <p class="section-tag" style="color:rgba(220,50,50,0.45)">// Justice · Tribunal Communautaire</p>
+    <h2 class="section-title" data-i18n-html="title_tribunal">Une justice rendue<br><em>par la communauté.</em></h2>
+    <p class="section-body">Pas de modérateur anonyme caché. Tous les conflits arbitrés par un panel tournant de membres volontaires — vote secret, transparence totale, résultats publics.</p>
+  </div>
+  <div class="verdict-grid">
+    <div class="vcard">
+      <div class="vnum">// 01 · TRIBUNAL VERDICT</div>
+      <div class="vtxt">Coupable ? 7 jours en mode lecture seule, ou 25 $ pour le pardon.</div>
+      <div class="vsub">Ton accès devient passif : tu vois mais tu ne peux rien faire pendant 7 jours.</div>
+    </div>
+    <div class="vcard">
+      <div class="vnum">// 02 · PANEL TOURNANT</div>
+      <div class="vtxt">12 membres tirés au sort. Identités protégées. Vote secret.</div>
+      <div class="vsub">Chaque panel est différent. Aucune clique ne contrôle le verdict.</div>
+    </div>
+    <div class="vcard">
+      <div class="vnum">// 03 · BANNISSEMENT</div>
+      <div class="vtxt">3 verdicts coupables = exclusion définitive. Sans appel possible.</div>
+      <div class="vsub">Les récidivistes ne reviennent pas. La communauté se protège elle-même.</div>
+    </div>
+  </div>
+  <div class="trib-stats">
+    <div class="ts"><span class="ts-n">12</span><span class="ts-l">Membres / panel</span></div>
+    <div class="ts"><span class="ts-n">48h</span><span class="ts-l">Délai max décision</span></div>
+    <div class="ts"><span class="ts-n" id="trib-count">0</span><span class="ts-l">Dossiers traités</span></div>
+  </div>
+  <div class="trib-form-wrap">
+    <div class="trib-form-title">// Soumettre un signalement anonyme</div>
+    <form id="tribunal-form" onsubmit="handleSignalement(event)">
+      <input id="trib-pseudo" class="form-input" type="text" placeholder="Ton pseudo (anonyme)" maxlength="30">
+      <input id="trib-accuse" class="form-input" type="text" placeholder="Pseudo du membre visé (obligatoire)" maxlength="30">
+      <select id="trib-motif" class="form-input">
+        <option value="">Choisir un motif...</option>
+        <option value="harcèlement">Harcèlement</option>
+        <option value="faux profil">Faux profil</option>
+        <option value="comportement abusif">Comportement abusif</option>
+        <option value="discours haineux">Discours haineux</option>
+        <option value="autre">Autre</option>
+      </select>
+      <textarea id="trib-details" class="form-input" maxlength="500" placeholder="Décris brièvement la situation..." style="height:90px;resize:none"></textarea>
+      <div id="trib-success" style="display:none;padding:14px;text-align:center;font-size:0.6rem;co

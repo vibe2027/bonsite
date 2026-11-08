@@ -1,0 +1,42 @@
+# Netlify Configuration for VIBE
+
+[build]
+  command = "npm install && npm run build"
+  functions = "functions"
+  publish = "."
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+
+# Redirect API calls to serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200
+
+# Redirect root to index.html
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Handle SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables
+[context.production.environment]
+  NODE_ENV = "production"
+  BASE_URL = "https://vibegay.ca"
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"

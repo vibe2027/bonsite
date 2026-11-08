@@ -1,0 +1,79 @@
+,0.9)}
+
+/* ADMIN */
+#admin-panel{
+  position:fixed;bottom:20px;right:20px;z-index:9999;
+  background:rgba(0,0,0,0.97);border:1px solid rgba(212,175,55,0.4);
+  padding:20px;width:320px;font-family:'Share Tech Mono',monospace;
+  backdrop-filter:blur(20px);max-height:80vh;overflow-y:auto;
+  box-shadow:0 0 40px rgba(212,175,55,0.08);
+}
+
+/* -- RÉSEAU / GLOBE -- */
+#reseau-section{position:relative;z-index:10;padding:80px 24px;border-top:0.5px solid rgba(212,175,55,0.15);text-align:center}
+.globe-wrap{position:relative;width:100%;max-width:520px;margin:32px auto 0;aspect-ratio:1/1}
+#globe-canvas{width:100%;height:100%;display:block}
+.globe-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:28px}
+.globe-city{font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:2px;color:rgba(212,175,55,0.6);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.globe-city::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(212,175,55,0.8)}
+
+/* -- SALON DE LA VOIX (démo audio) -- */
+#voix-section{position:relative;z-index:10;padding:80px 24px;border-top:0.5px solid rgba(180,79,255,0.15);text-align:center}
+.voix-demo{position:relative;max-width:560px;margin:32px auto 0;border:0.5px solid rgba(180,79,255,0.4);border-radius:22px;background:rgba(180,79,255,0.04);padding:28px 24px;overflow:hidden;backdrop-filter:blur(10px)}
+.voix-demo::before{content:'';position:absolute;inset:0;z-index:-1;opacity:0.4;background:radial-gradient(circle at 20% 0%,rgba(255,77,210,0.25),transparent 55%),radial-gradient(circle at 90% 100%,rgba(0,180,255,0.2),transparent 55%)}
+.voix-demo-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.voix-demo-tag{font-family:'Share Tech Mono',monospace;font-size:0.46rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
+.voix-demo-status{display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:0.46rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.voix-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3)}
+.voix-dot.live{background:var(--gold);animation:voix-pulse 1s ease-in-out infinite}
+@keyframes voix-pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.voix-wavebox{display:flex;align-items:center;justify-content:center;gap:3px;height:90px;margin:24px 0}
+.voix-wavebox span{width:5px;border-radius:3px;background:linear-gradient(180deg,#ff4dd2,#b44fff);box-shadow:0 0 8px rgba(180,79,255,0.5);height:12%;transition:height 0.2s ease}
+.voix-transcript{min-height:90px;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;background:rgba(0,0,0,0.5);padding:18px;font-family:'Share Tech Mono',monospace;text-align:left}
+.voix-who{font-size:0.46rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.voix-said{font-size:0.7rem;line-height:1.6;color:rgba(255,255,255,0.85)}
+.voix-idle{font-size:0.62rem;color:rgba(255,255,255,0.72);font-style:italic}
+.voix-demo-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-top:22px}
+.voix-play{display:inline-flex;align-items:center;background:linear-gradient(90deg,#ff4dd2,#b44fff);border:none;color:#fff;padding:12px 24px;border-radius:30px;font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:transform 0.2s;box-shadow:0 0 20px rgba(180,79,255,0.3)}
+.voix-play:hover{transform:scale(1.04)}
+.voix-play:disabled{opacity:0.4;cursor:not-allowed}
+.voix-demo-meta{font-family:'Share Tech Mono',monospace;font-size:0.44rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+
+/* -- SÉLECTEUR DE LANGUE -- */
+.lang-select{position:fixed;top:58px;right:14px;z-index:1200}
+.lang-btn{background:rgba(0,0,0,0.7);border:0.5px solid rgba(212,175,55,0.4);color:rgba(212,175,55,0.9);font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:2px;padding:7px 12px;border-radius:8px;cursor:pointer;backdrop-filter:blur(10px);text-transform:uppercase}
+.lang-btn:hover{border-color:rgba(212,175,55,0.7)}
+.lang-menu{position:absolute;top:36px;right:0;background:rgba(5,5,5,0.95);border:0.5px solid rgba(212,175,55,0.3);border-radius:10px;padding:6px;backdrop-filter:blur(20px);display:none;flex-direction:column;min-width:130px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+.lang-menu.open{display:flex}
+.lang-menu button{background:transparent;border:none;color:rgba(255,255,255,0.6);font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:1px;padding:8px 10px;text-align:left;cursor:pointer;border-radius:6px;transition:all 0.2s}
+.lang-menu button:hover{background:rgba(212,175,55,0.12);color:var(--gold)}
+.lang-menu button.active{color:var(--gold);background:rgba(212,175,55,0.08)}
+
+/* -- SALLE D'AUDIENCE + VERDICT -- */
+.audience-wrap{max-width:720px;margin:50px auto 0;padding:0 24px}
+.audience-title{font-size:0.55rem;letter-spacing:4px;color:rgba(220,50,50,0.55);font-family:'Share Tech Mono',monospace;margin-bottom:18px;text-transform:uppercase}
+.aud-pseudo{width:100%;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.15);color:#fff;padding:12px 14px;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:2px;margin-bottom:18px}
+.aud-card{border:0.5px solid rgba(220,50,50,0.2);background:rgba(220,50,50,0.03);padding:20px;margin-bottom:14px}
+.aud-motif{font-size:0.62rem;letter-spacing:2px;color:rgba(255,255,255,0.85);font-family:'Share Tech Mono',monospace;margin-bottom:6px}
+.aud-details{font-size:0.55rem;line-height:1.9;color:rgba(255,255,255,0.5);margin-bottom:14px}
+.aud-counts{font-size:0.48rem;letter-spacing:2px;color:rgba(255,255,255,0.35);font-family:'Share Tech Mono',monospace;margin-bottom:14px}
+.aud-btns{display:flex;gap:12px;flex-wrap:wrap}
+.aud-btn{flex:1;min-width:140px;padding:13px 10px;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:2px;cursor:pointer;background:transparent;border:1px solid;transition:all 0.3s}
+.aud-btn.innocent{color:#D4AF37;border-color:rgba(212,175,55,0.45)}
+.aud-btn.innocent:hover{background:rgba(212,175,55,0.1)}
+.aud-btn.coupable{color:#DC3232;border-color:rgba(220,50,50,0.45)}
+.aud-btn.coupable:hover{background:rgba(220,50,50,0.1)}
+.aud-empty{font-size:0.55rem;letter-spacing:2px;color:rgba(255,255,255,0.3);font-family:'Share Tech Mono',monospace;padding:20px 0}
+#verdict-overlay{position:fixed;inset:0;z-index:9500;display:none;align-items:center;justify-content:center;flex-direction:column;background:#000}
+#verdict-overlay.show{display:flex}
+#verdict-fx{position:absolute;inset:0;width:100%;height:100%}
+.verdict-text{position:relative;z-index:3;font-family:'Cinzel',Georgia,serif;font-size:clamp(1.6rem,7vw,3.2rem);letter-spacing:12px;opacity:0;font-weight:700;text-align:center}
+.verdict-text.appear{animation:verdict-text-in 2.4s cubic-bezier(0.16,1,0.3,1) 1.6s forwards}
+@keyframes verdict-text-in{0%{opacity:0;letter-spacing:34px;filter:blur(14px)}100%{opacity:1;letter-spacing:12px;filter:blur(0)}}
+.verdict-sub{position:relative;z-index:3;margin-top:16px;font-size:0.52rem;letter-spacing:4px;opacity:0;color:rgba(255,255,255,0.75);font-family:'Share Tech Mono',monospace;text-align:center;padding:0 20px}
+.verdict-sub.appear{animation:verdict-sub-in 1.6s ease 3s forwards}
+@keyframes verdict-sub-in{to{opacity:1}}
+#verdict-close{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:4;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);padding:12px 30px;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:3px;cursor:pointer;opacity:0}
+#verdict-close.appear{animation:verdict-sub-in 1s ease 3.6s forwards}
+#verdict-overlay.shake #verdict-fx{animation:verdict-shake 0.6s ease-in-out 3}
+@keyframes verdict-shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-10px,5px)}40%{transfo

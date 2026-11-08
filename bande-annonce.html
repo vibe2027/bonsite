@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIBE — Bande-annonce</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#07070a;
+    --gold:#d4af37;
+    --gold-dim:rgba(212,175,55,0.35);
+    --white:#f2ede0;
+    --red:#c93b3b;
+    --cyan:#3fd4e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{
+    width:100%;height:100%;background:#000;overflow:hidden;
+    font-family:'Share Tech Mono',monospace;
+  }
+  #stage{
+    position:relative;width:100vw;height:100vh;background:var(--black);
+    display:flex;align-items:center;justify-content:center;
+  }
+  /* Letterbox cinéma */
+  .bar{position:absolute;left:0;width:100%;height:9vh;background:#000;z-index:50;}
+  .bar.top{top:0;} .bar.bottom{bottom:0;}
+
+  /* Grain de film subtil */
+  #grain{
+    position:absolute;inset:0;z-index:40;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .scene{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;opacity:0;padding:0 8vw;
+  }
+
+  .eyebrow{
+    font-size:clamp(0.6rem,1.4vw,0.85rem);letter-spacing:0.5em;color:var(--gold);text-transform:uppercase;margin-bottom:2vh;
+  }
+  .line{
+    font-family:'Playfair Display',serif;font-weight:400;font-style:italic;
+    font-size:clamp(1.3rem,3.4vw,2.4rem);color:var(--white);line-height:1.5;max-width:44ch;
+  }
+  .statline{
+    font-family:'Share Tech Mono',monospace;font-size:clamp(0.75rem,1.6vw,1rem);letter-spacing:0.25em;color:rgba(255,255,255,0.55);margin-top:2vh;
+  }
+
+  /* Logo VIBE */
+  .orbit{position:absolute;border:1px solid var(--gold-dim);border-radius:50%;}
+  #logo-scene .orbit1{width:34vw;height:34vw;}
+  #logo-scene .orbit2{width:42vw;height:42vw;border-color:rgba(212,175,55,0.18);}
+  #logo-scene .orbit3{width:50vw;height:50vw;border-color:rgba(212,175,55,0.08);}
+  .vibe-title{
+    font-family:'Playfair Display',serif;font-weight:900;color:var(--gold);
+    font-size:clamp(4rem,16vw,11rem);letter-spacing:0.06em;position:relative;z-index:2;
+    text-shadow:0 0 60px rgba(212,175,55,0.35);
+  }
+  .vibe-sub{
+    font-size:clamp(0.6rem,1.4vw,0.9rem);letter-spacing:0.6em;color:rgba(255,255,255,0.6);margin-top:1.5vh;position:relative;z-index:2;
+  }
+
+  /* Scènes de fonctionnalités : flashs rapides */
+  .feature-num{
+    font-family:'Share Tech Mono',monospace;color:var(--gold);font-size:clamp(0.7rem,1.5vw,1rem);letter-spacing:0.4em;margin-bottom:1.4vh;
+  }
+  .feature-title{
+    font-family:'Playfair Display',serif;font-weight:700;color:var(--white);
+    font-size:clamp(2rem,6vw,4.2rem);letter-spacing:0.02em;
+  }
+  .feature-title.red{color:var(--red);}
+  .feature-title.cyan{color:var(--cyan);}
+  .feature-desc{
+    margin-top:2vh;font-size:clamp(0.7rem,1.4vw,1rem);color:rgba(255,255,255,0.55);letter-spacing:0.08em;max-width:38ch;
+  }
+
+  .price-block{border:1px solid var(--gold-dim);padding:5vh 8vw;}
+  .price{
+    font-family:'Playfair Display',serif;font-weight:900;color:var(--white);font-size:clamp(3rem,9vw,6rem);margin:2vh 0;
+  }
+
+  .cta-url{
+    font-family:'Share Tech Mono',monospace;color:var(--gold);font-size:clamp(1.2rem,3vw,2rem);letter-spacing:0.35em;margin-top:3vh;
+  }
+
+  #replay{
+    position:absolute;bottom:11vh;right:3vw;z-index:60;background:transparent;border:1px solid var(--gold-dim);
+    color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;padding:10px 16px;
+    cursor:pointer;opacity:0;animation:showReplay 1s ease forwards;animation-delay:29s;
+  }
+  #replay:hover{background:var(--gold);color:#000;}
+  @keyframes showReplay{to{opacity:0.7;}}
+
+  @keyframes fadeHold{
+    0%{opacity:0;transform:scale(1.03);}
+    10%{opacity:1;transform:scale(1);}
+    85%{opacity:1;}
+    100%{opacity:0;transform:scale(0.98);}
+  }
+  @keyframes logoIn{
+    0%{opacity:0;transform:scale(0.9);}
+    18%{opacity:1;transform:scale(1);}
+    88%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:scale(1.04);}
+  }
+  @keyframes orbitSpin{ from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);} }
+
+  .scene{animation:fadeHold 3.4s ease forwards;}
+  #scene1{animation-delay:0.3s;}
+  #scene2{animation-delay:3.5s;}
+  #logo-scene{animation:logoIn 5.5s ease forwards;animation-delay:6.7s;}
+  #scene3{animation-delay:12.0s;animation-duration:2.6s;}
+  #scene4{animation-delay:14.4s;animation-duration:2.6s;}
+  #scene5{animation-delay:16.8s;animation-duration:2.6s;}
+  #scene6{animation-delay:19.2s;animation-duration:3.2s;}
+  #scene7{animation-delay:22.2s;animation-duration:6.5s;}
+
+  .orbit1,.orbit2,.orbit3{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    animation:orbitSpin 40s linear infinite;
+  }
+  .orbit2{animation-duration:60s;animation-direction:reverse;}
+  .orbit3{animation-duration:90s;}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+<div id="stage">
+  <div class="bar top"></div>
+  <div class="bar bottom"></div>
+  <div id="grain"></div>
+
+  <div class="scene" id="scene1">
+    <div class="eyebrow">Chaque soir</div>
+    <div class="line">Des milliers d'hommes rencontrent des inconnus<br>à travers un écran.</div>
+  </div>
+
+  <div class="scene" id="scene2">
+    <div class="line">Peu de réseaux ont été pensés<br>pour leur sécurité en premier.</div>
+    <div class="statline">— aucun système d'alerte réelle. aucune justice communautaire. —</div>
+  </div>
+
+  <div class="scene" id="logo-scene">
+    <div class="orbit orbit1"></div>
+    <div class="orbit orbit2"></div>
+    <div class="orbit orbit3"></div>
+    <div class="vibe-title">VIBE</div>
+    <div class="vibe-sub">R É S E A U   L G B T Q +   ·   N É   À   Q U É B E C</div>
+  </div>
+
+  <div class="scene" id="scene3">
+    <div class="feature-num">01 — MODE ANGE GARDIEN</div>
+    <div class="feature-title red">3 SECONDES.</div>
+    <div class="feature-desc">Triple-tap. Ta position et l'audio ambiant, envoyés instantanément à ton contact de confiance.</div>
+  </div>
+
+  <div class="scene" id="scene4">
+    <div class="feature-num">02 — SALLE DES FANTÔMES</div>
+    <div class="feature-title">INVISIBLE.</div>
+    <div class="feature-desc">Ton identité n'est jamais transmise — même pas à la base de données.</div>
+  </div>
+
+  <div class="scene" id="scene5">
+    <div class="feature-num">03 — TRIBUNAL COMMUNAUTAIRE</div>
+    <div class="feature-title cyan">LA COMMUNAUTÉ DÉCIDE.</div>
+    <div class="feature-desc">La justice n'appartient pas qu'aux administrateurs.</div>
+  </div>
+
+  <div class="scene" id="scene6">
+    <div class="eyebrow">VIBE</div>
+    <div class="line">Un réseau qui protège<br>autant qu'il connecte.</div>
+  </div>
+
+  <div class="scene" id="scene7">
+    <div class="price-block">
+      <div class="price">500 billets à 99 $</div>
+    </div>
+    <div class="cta-url">VIBEGAY.CA</div>
+  </div>
+
+  <button id="replay" onclick="location.reload()">⟲ REJOUER</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,129 @@
+)=>
+    '<button type="button" data-int="'+k+'" onclick="pfIntention=\''+k+'\';majIntBtns()" style="background:transparent;border:1px solid rgba(212,175,55,0.4);color:rgba(255,255,255,0.75);padding:8px 12px;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:1px;cursor:pointer">'+v+'</button>').join('');
+  const idBox=document.getElementById('pf-identites');
+  idBox.innerHTML=Object.entries(IDENTITES).map(([k,v])=>
+    '<button type="button" data-id="'+k+'" onclick="pfIdentites=pfIdentites.includes(\''+k+'\')?pfIdentites.filter(x=>x!==\''+k+'\'):[...pfIdentites,\''+k+'\'];majIdentBtns()" style="background:transparent;border:1px solid rgba(212,175,55,0.4);color:rgba(255,255,255,0.75);padding:8px 12px;font-family:Share Tech Mono,monospace;font-size:0.5rem;letter-spacing:1px;cursor:pointer">'+v+'</button>').join('');
+  _supa.from('profiles').select('*').eq('id',CURRENT_USER.id).maybeSingle().then(({data})=>{
+    if(data){
+      document.getElementById('pf-nom').value=data.display_name||data.username||'';
+      document.getElementById('pf-age').value=data.age||'';
+      document.getElementById('pf-ville').value=data.city||'';
+      document.getElementById('pf-bio').value=data.bio||'';
+      document.getElementById('pf-langue').value=data.langue||'fr';
+      document.getElementById('pf-partage-distance').checked=data.partage_distance!==false;
+      document.getElementById('pf-carte-lien').style.display=data.is_founder?'block':'none';
+      pfIntention=data.intention||'jaser';
+      pfIdentites=Array.isArray(data.identites)&&data.identites.length?data.identites:(Array.isArray(CURRENT_USER.user_metadata?.identites)?CURRENT_USER.user_metadata.identites:[]);
+      if(data.photo_url)document.getElementById('pf-photo-prev').innerHTML='<img src="'+escHtml(data.photo_url)+'" alt="Photo de profil" style="width:100%;height:100%;object-fit:cover">';
+    }else{
+      document.getElementById('pf-nom').value=CURRENT_USER.user_metadata?.prenom||'';
+      document.getElementById('pf-ville').value=CURRENT_USER.user_metadata?.ville||'';
+      pfIdentites=Array.isArray(CURRENT_USER.user_metadata?.identites)?CURRENT_USER.user_metadata.identites:[];
+    }
+    majIntBtns();
+    majIdentBtns();
+  });
+  document.getElementById('profil-modal').classList.add('open');
+}
+function majIdentBtns(){
+  document.querySelectorAll('#pf-identites button').forEach(b=>{
+    const on=pfIdentites.includes(b.dataset.id);
+    b.style.background=on?'rgba(212,175,55,0.9)':'transparent';
+    b.style.color=on?'#000':'rgba(255,255,255,0.75)';
+  });
+}
+function majIntBtns(){
+  document.querySelectorAll('#pf-intentions button').forEach(b=>{
+    const on=b.dataset.int===pfIntention;
+    b.style.background=on?'rgba(212,175,55,0.9)':'transparent';
+    b.style.color=on?'#000':'rgba(255,255,255,0.75)';
+  });
+}
+function previsPhoto(inp){
+  const f=inp.files&&inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('pf-photo-prev').innerHTML='<img src="'+e.target.result+'" alt="Aperçu de la photo choisie" style="width:100%;height:100%;object-fit:cover">';};
+  r.readAsDataURL(f);
+}
+async function sauverProfil(e){
+  e.preventDefault();
+  const btn=document.getElementById('pf-save');btn.disabled=true;btn.textContent='Enregistrement...';
+  try{
+    let photo_url=null;
+    const f=document.getElementById('pf-photo').files[0];
+    if(f){
+      if(f.size>5*1024*1024)throw new Error('Photo trop lourde (max 5 Mo).');
+      const path=CURRENT_USER.id+'/avatar_'+Date.now()+'.'+(f.name.split('.').pop()||'jpg');
+      const {error:upErr}=await _supa.storage.from('avatars').upload(path,f,{upsert:true});
+      if(upErr)throw upErr;
+      photo_url=_supa.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+    }
+    const age=parseInt(document.getElementById('pf-age').value,10);
+    if(!age||age<18)throw new Error('18 ans et plus.');
+    const row={
+      id:CURRENT_USER.id,
+      display_name:document.getElementById('pf-nom').value.trim().slice(0,30),
+      age:age,
+      city:document.getElementById('pf-ville').value.trim().slice(0,40),
+      bio:document.getElementById('pf-bio').value.trim().slice(0,300),
+      langue:document.getElementById('pf-langue').value,
+      partage_distance:document.getElementById('pf-partage-distance').checked,
+      intention:pfIntention,
+      identites:pfIdentites,
+      is_online:true,
+      updated_at:new Date().toISOString()
+    };
+    if(photo_url)row.photo_url=photo_url;
+    const {error}=await _supa.from('profiles').upsert(row);
+    if(error)throw error;
+    document.getElementById('profil-modal').classList.remove('open');
+    showSuccess('✦ Profil enregistré !');
+    chargerDecouverte();
+  }catch(err){showError('⚠ '+(err.message||'Erreur.'));}
+  btn.disabled=false;btn.textContent='Enregistrer mon profil ✦';
+}
+document.getElementById('profil-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
+document.getElementById('fiche-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
+
+function renduIntChips(){
+  const box=document.getElementById('dec-intentions');if(!box)return;
+  box.innerHTML=Object.entries(INTENTIONS).map(([k,v])=>
+    '<button onclick="decFiltreIntention=decFiltreIntention===\''+k+'\'?null:\''+k+'\';renduIntChips();chargerDecouverte()" style="background:'+(decFiltreIntention===k?'rgba(212,175,55,0.9)':'transparent')+';border:1px solid rgba(212,175,55,0.4);color:'+(decFiltreIntention===k?'#000':'rgba(255,255,255,0.7)')+';padding:8px 10px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:1px;cursor:pointer">'+v+'</button>').join('');
+  const idBox=document.getElementById('dec-identites');if(!idBox)return;
+  idBox.innerHTML=Object.entries(IDENTITES).map(([k,v])=>
+    '<button onclick="decFiltreIdentite=decFiltreIdentite===\''+k+'\'?null:\''+k+'\';renduIntChips();chargerDecouverte()" style="background:'+(decFiltreIdentite===k?'rgba(212,175,55,0.9)':'transparent')+';border:1px solid rgba(212,175,55,0.4);color:'+(decFiltreIdentite===k?'#000':'rgba(255,255,255,0.7)')+';padding:8px 10px;font-family:Share Tech Mono,monospace;font-size:0.48rem;letter-spacing:1px;cursor:pointer">'+v+'</button>').join('');
+}
+async function ouvrirCartePionnier(){
+  try{
+    const {data}=await _supa.rpc('ma_carte_pionnier');
+    if(!data||data.ok===false){showError('⚠ Carte indisponible.');return;}
+    document.getElementById('cp-numero').textContent='N° '+String(data.numero).padStart(3,'0');
+    document.getElementById('cp-nom').textContent=data.nom;
+    const d=new Date(data.membre_depuis);
+    document.getElementById('cp-depuis').textContent='MEMBRE DEPUIS '+d.toLocaleDateString('fr-CA',{year:'numeric',month:'long'}).toUpperCase();
+    document.getElementById('carte-pionnier-modal').classList.add('open');
+  }catch(e){showError('⚠ Erreur.');}
+}
+let maPosition=null,maPositionTentee=false;
+async function obtenirMaPosition(){
+  if(maPosition||maPositionTentee)return maPosition;
+  maPositionTentee=true;
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000,maximumAge:600000}));
+    maPosition={lat:pos.coords.latitude,lon:pos.coords.longitude};
+    if(CURRENT_USER)_supa.from('profiles').update({latitude:maPosition.lat,longitude:maPosition.lon}).eq('id',CURRENT_USER.id).then(()=>{});
+  }catch(e){maPosition=null;}
+  return maPosition;
+}
+// -- BOUTIQUE — extras --
+// Une fois les liens de paiement Stripe créés, colle les URL ici (une par extra).
+const EXTRA_LINKS={
+  boost:'',
+  fantome:'',
+  visites:''
+};
+function acheterExtra(type){
+  if(!CURRENT_USER){showError('⚠ Connecte-toi pour acheter.');openLogin();return;}
+  const lien=EXTRA_LINKS[type];
+  if(!lien){showError('⚠ Bientôt disponible.');return;}
+  window.location.href=lien+(lien.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(CURRENT_USER.email||'')+'&client_reference_id='+encodeURICompon
